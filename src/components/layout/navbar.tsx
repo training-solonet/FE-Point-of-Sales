@@ -13,7 +13,7 @@ export default function Sidebar() {
 
   return (
     <>
-      <div className="min-h-screen bg-fixed w-12 group fixed lg:block hidden">
+      <div className="min-h-screen bg-fixed w-12 group fixed lg:block hidden z-20">
         <div className="flex flex-col top-0 gap-y-5 pt-3 pl-3 w-full min-h-screen bg-black text-white absolute z-50">
           <Link href="/" className="mb-4">
             <Menu />
@@ -45,7 +45,7 @@ export default function Sidebar() {
         </div>
       </div>
 
-      <div className="hidden md:block lg:hidden w-full bottom-0 fixed bg-black">
+      <div className="hidden md:block lg:hidden w-full bottom-0 fixed bg-black z-10">
         <div className="w-full h-12 flex justify-between items-center px-8">
           <p className="text-white font-medium text-sm">Point of Sales</p>
           <div className="flex gap-x-8 justify-center items-center text-white">
