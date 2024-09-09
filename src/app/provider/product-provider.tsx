@@ -20,10 +20,43 @@ export type ProductContextType = {
     isError: boolean;
 }
 
+export enum FilterActionKind {
+    FILTER_PRODUCT = "FILTER_PRODUCT",
+}
+
 export const ProductContext = createContext<ProductContextType | null>(null);
 
-const ProductProvider: React.FC<ProductProviderProps> = ({ children }) => {
+type FilterState = {
+    nama: string,
+    kategori: string,
+    harga: number,
+    stok: number
+}
 
+type FilterAction = {
+    type: FilterActionKind,
+    payload: {
+        kategori: string,
+        nama: string
+    }
+}
+
+function productReducer(state: FilterState, action: FilterAction) {
+    switch (action.type) {
+        case FilterActionKind.FILTER_PRODUCT: {
+            return {
+                ...state,
+                kategori: action.payload.kategori,
+                nama: action.payload.nama
+            }
+        }
+        default: {
+            return state
+        }
+    }
+}
+
+const ProductProvider: React.FC<ProductProviderProps> = ({ children }) => {
     const { data, isLoading, isError } = useQuery({
         queryKey: ["products"],
         queryFn: async () => {

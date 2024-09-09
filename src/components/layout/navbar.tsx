@@ -13,7 +13,7 @@ export default function Sidebar() {
 
   return (
     <>
-      <div className="min-h-screen bg-fixed w-12 group fixed lg:block hidden z-20">
+      <div className="min-h-screen bg-fixed w-12 group fixed xl:block hidden z-20">
         <div className="flex flex-col top-0 gap-y-5 pt-3 pl-3 w-full min-h-screen bg-black text-white absolute z-50">
           <Link href="/" className="mb-4">
             <Menu />
@@ -37,26 +37,26 @@ export default function Sidebar() {
             <p>Home</p>
           </Link>
           <Link href="/" className="font-medium">
-            <p>Transaksi</p>
+            <p>Transaction</p>
           </Link>
           <Link href="/" className="font-medium">
-            <p>Produk</p>
+            <p>Product</p>
           </Link>
         </div>
       </div>
 
-      <div className="hidden md:block lg:hidden w-full bottom-0 fixed bg-black z-10">
-        <div className="w-full h-12 flex justify-between items-center px-8">
+      <div className="hidden lg:block xl:hidden w-full bottom-0 fixed bg-black z-10">
+        <div className="w-full h-12 flex justify-between items-center px-16">
           <p className="text-white font-medium text-sm">Point of Sales</p>
           <div className="flex gap-x-8 justify-center items-center text-white">
             <Link href="/" className="flex">
               <Home /> <p className="ml-2">Home</p>
             </Link>
             <Link href="/" className="flex">
-              <ReceiptText /> <p className="ml-2">Transaksi</p>
+              <ReceiptText /> <p className="ml-2">Transaction</p>
             </Link>
             <Link href="/" className="flex">
-              <Package2 /> <p className="ml-2">Produk</p>
+              <Package2 /> <p className="ml-2">Product</p>
             </Link>
           </div>
         </div>
@@ -90,10 +90,10 @@ export default function Sidebar() {
                     <Home /> <p className="ml-2">Home</p>
                 </Link>
                 <Link href="/" className="flex font-semibold text-sm items-center">
-                    <ReceiptText /> <p className="ml-2">Transaksi</p>
+                    <ReceiptText /> <p className="ml-2">Transaction</p>
                 </Link>
                 <Link href="/" className="flex font-semibold text-sm items-center">
-                    <Package2 /> <p className="ml-2">Produk</p>
+                    <Package2 /> <p className="ml-2">Product</p>
                 </Link>
             </div>
           </div>

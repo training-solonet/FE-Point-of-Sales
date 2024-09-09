@@ -1,10 +1,10 @@
-import type { Metadata } from "next";
 import "./globals.css";
 import { Poppins } from "next/font/google";
 import Sidebar from "@/components/layout/navbar";
 import Container from "@/components/layout/container";
 import QCProvider from "./provider/query-provider";
 import ProductProvider from "./provider/product-provider";
+import { Metadata } from "next";
 
 const poppins = Poppins({
   subsets: ["latin"],
