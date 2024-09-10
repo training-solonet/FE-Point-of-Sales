@@ -8,10 +8,12 @@ import { useDispatch } from "react-redux";
 import { clear, decrement, deleteById, increment } from "../redux/cartSlice";
 import { Trash2 } from "lucide-react";
 import SkeletonLoader from "./skeleton-loader";
+import { ProductType } from "./card-product";
+import Image from "next/image";
 
 export default function CartTransaction() {
   const [isLoading, setIsLoading] = useState(false);
-  const [data, setData] = useState<any>([]);
+  const [data, setData] = useState<ProductType[]>([]);
   const dispatch = useDispatch()
 
   const fetchData = async () => {
@@ -22,8 +24,8 @@ export default function CartTransaction() {
     const cartItems = cartItemsString ? JSON.parse(cartItemsString) : [];
 
     if (Array.isArray(product)) {
-      const productInCart = product.map((p: any) => {
-        const cartItem = cartItems.find((item: any) => item.id === p.id);
+      const productInCart = product.map((p: ProductType) => {
+        const cartItem = cartItems.find((item: ProductType) => item.id === p.id);
         return {
           ...p,
           qty: cartItem ? cartItem.qty : 0,
@@ -99,22 +101,25 @@ export default function CartTransaction() {
   );
 }
 
-function Card({ data }: { data: any }) {
+function Card({ data }: { data: ProductType[] }) {
   const dispatch = useDispatch()
-  const incrementQty = (item: any) => {
-    dispatch(increment(item.id));
+  const incrementQty = (item: number) => {
+    dispatch(increment(item));
   }
 
-  const decrementQty = (item: any) => {
-    dispatch(decrement(item.id));
+  const decrementQty = (item: number) => {
+    dispatch(decrement(item));
   }
 
   return (
     <>
-      {data.map((item: any) => (
+      {data.map((item: ProductType) => (
         <div key={item.id} className="flex gap-x-2 mb-4">
-          <img
-            src={item.gambar}
+          <Image
+            // src={item.gambar}
+            src={"https://via.placeholder.com/300x300?text=Image+Product+1:1"}
+            width={300}
+            height={300}
             alt={item.nama}
             className="w-16 h-16 rounded-lg object-cover"
           />
@@ -127,11 +132,11 @@ function Card({ data }: { data: any }) {
             <div className="flex justify-between items-center mt-1">
               <p className="text-sm font-medium">x{item.qty}</p>
               <div className="flex gap-x-2 items-center">
-                <div onClick={() => decrementQty(item)} className="w-5 h-5 bg-slate-300 rounded-md flex justify-center items-center cursor-pointer">
+                <div onClick={() => decrementQty(item.id)} className="w-5 h-5 bg-slate-300 rounded-md flex justify-center items-center cursor-pointer">
                   -
                 </div>
                 <div className="text-xs font-medium">{item.qty}</div>
-                <div onClick={() => incrementQty(item)} className="w-5 h-5 bg-black text-white rounded-md flex justify-center items-center cursor-pointer">
+                <div onClick={() => incrementQty(item.id)} className="w-5 h-5 bg-black text-white rounded-md flex justify-center items-center cursor-pointer">
                   +
                 </div>
               </div>

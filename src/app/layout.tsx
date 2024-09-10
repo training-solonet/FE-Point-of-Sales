@@ -22,12 +22,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${poppins.className} bg-background text-foreground`}>
+      <body className={`${poppins.className} bg-background text-foreground`} suppressHydrationWarning={true}>
         <div className="flex flex-col sm:flex-row gap-x-8">
           <Sidebar />
           <Container>
             <QCProvider>
-              <ProductProvider>{children}</ProductProvider>
+              <ProductProvider>
+                {children}
+                </ProductProvider>
             </QCProvider>
           </Container>
         </div>

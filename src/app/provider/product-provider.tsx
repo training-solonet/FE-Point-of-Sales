@@ -2,7 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { createContext } from "react";
+import { createContext, useReducer } from "react";
 
 interface ProductProviderProps {
     children: React.ReactNode;
@@ -41,6 +41,13 @@ type FilterAction = {
     }
 }
 
+const initialFilterState: FilterState = {
+    nama: "",
+    kategori: "",
+    harga: 0,
+    stok: 0
+}
+
 function productReducer(state: FilterState, action: FilterAction) {
     switch (action.type) {
         case FilterActionKind.FILTER_PRODUCT: {
@@ -64,6 +71,9 @@ const ProductProvider: React.FC<ProductProviderProps> = ({ children }) => {
             return response.data;
         },
     });
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [filterState, dispatch] = useReducer(productReducer, initialFilterState)
 
     return (
         <ProductContext.Provider value={{ products: data, isLoading, isError }}>
