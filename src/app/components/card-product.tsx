@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux";
 import { addToCart } from "../redux/cartSlice";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { getBestSeller } from "../lib/data";
+import { getAllProduct, getBestSeller } from "../lib/data";
 import SkeletonLoader from "./skeleton-loader";
 import { ShoppingCart } from "lucide-react";
 
@@ -21,7 +21,7 @@ export interface ProductType {
 export default function CardProduct() {
   const dispatch = useDispatch();
   const [products, setProducts] = useState<ProductType[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleAddToCart = (product: number) => {
     dispatch(
@@ -36,7 +36,8 @@ export default function CardProduct() {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const res = await getBestSeller();
+        // const res = await getBestSeller();
+        const res = await getAllProduct();
         setProducts(res || []);
       } catch (error) {
         console.error("Failed to fetch products", error);
@@ -88,7 +89,7 @@ export default function CardProduct() {
         {products.map((data: ProductType) => (
           <div
             key={data.id}
-            className="bg-white shadow-2xl h-full px-2 py-3 rounded-xl flex flex-col cursor-pointer"
+            className="bg-white shadow-2xl h-full px-2 py-3 rounded-xl flex flex-col"
           >
             <Image
               src="https://via.placeholder.com/300x300?text=Image+Product+1:1"
@@ -110,7 +111,7 @@ export default function CardProduct() {
               {/* <p className="text-[9px] font-medium">{data.stok} items</p> */}
               <ShoppingCart
                 onClick={() => handleAddToCart(data.id)}
-                className="size-6 text-white bg-black rounded-2xl p-[6px]"
+                className="size-6 text-white bg-black rounded-2xl p-[6px] cursor-pointer"
               />
             </div>
           </div>

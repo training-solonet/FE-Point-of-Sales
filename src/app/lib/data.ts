@@ -27,3 +27,12 @@ export const getAllProduct = async () => {
         console.log("Error fetching data: ", err);
     }
 }
+
+export const getProductByCategory = async ({ nama }: { nama: string }) => {
+    try {
+        const res = await axios.get(`https://penjualan.connectis.my.id/api/product?kategori=${nama}`);
+        return res.data.data
+    } catch (err) {
+        console.log("Error fetching data: ", err);
+    }
+}

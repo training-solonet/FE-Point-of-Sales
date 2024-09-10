@@ -8,7 +8,8 @@ const store = configureStore({
 })
 
 store.subscribe(() => {
-    console.log(`Onchange store : ${store.getState()}`)
+    const currentState = store.getState()
+    console.log(`Onchange store : ${JSON.stringify(currentState.cart.data)}`)
 })
 
 export default store
