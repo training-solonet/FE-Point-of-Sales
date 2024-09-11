@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { getCategory } from "../lib/data";
 import SkeletonLoader from "./skeleton-loader";
-import { useDispatch } from "react-redux";
-import { FilterActionKind } from "../provider/product-provider";
+import { useDispatch, useSelector } from "react-redux";
+import { clearFilter, setFilterCategory } from "../redux/categorySlice";
+import { RootStateCategory } from "./card-product";
 
 export type CategoryType = {
   id: number;
@@ -13,12 +14,13 @@ export default function CategoryList() {
   const [categories, setCategories] = useState<CategoryType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch();
+  const selectedCategory = useSelector((state: RootStateCategory) => state.category.data)
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const res = await getCategory();
-        setCategories(res || []);
+        setCategories(res || {});
       } catch (error) {
         console.error("Failed to fetch categories", error);
         setCategories([]);
@@ -30,15 +32,11 @@ export default function CategoryList() {
   }, []);
 
   const handleCategoryClick = (category: CategoryType) => {
-    dispatch({
-      type: FilterActionKind.FILTER_PRODUCT,
-      payload: { kategori: category.id, nama: category.nama },
-    });
+    dispatch(setFilterCategory(category.id));
   };
 
   return (
     <div className="mt-5 w-[95%]">
-      {/* <h1 className="text-lg font-semibold mb-2">Categories</h1> */}
       {isLoading ? (
         <SkeletonLoader.Category />
       ) : (
@@ -47,14 +45,17 @@ export default function CategoryList() {
             className="flex space-x-2 md:space-x-4 flex-nowrap items-center overflow-auto"
             style={{ scrollbarWidth: "none" }}
           >
-            <div className="flex-shrink-0 min-w-auto text-xs sm:text-sm lg:text-xs font-semibold px-4 py-1 md:px-5 md:py-2 lg:px-5 lg:py- bg-transparent border-[2px] border-black hover:bg-black hover:text-white duration-200 ease-linear rounded-3xl cursor-pointer">
+            <div
+              onClick={() => dispatch(clearFilter())}
+              className={`${selectedCategory.kategori === 0 ? 'bg-black text-white' : 'bg-transparent'} border-black flex-shrink-0 min-w-auto text-xs sm:text-sm lg:text-xs font-semibold px-4 py-1 md:px-5 md:py-2 lg:px-5 lg:py- border-[2px] hover:bg-black hover:text-white duration-200 ease-linear rounded-3xl cursor-pointer`}
+            >
               All
             </div>
             {categories.map((category: CategoryType) => (
               <div
                 key={category.id}
                 onClick={() => handleCategoryClick(category)}
-                className="flex-shrink-0 min-w-auto text-xs sm:text-sm lg:text-xs font-semibold px-4 py-1 md:px-5 md:py-2 lg:px-5 lg:py- bg-transparent border-[2px] border-black hover:bg-black hover:text-white duration-200 ease-linear rounded-3xl cursor-pointer"
+                className={`${selectedCategory.kategori > 0 && selectedCategory.kategori === category.id ? 'bg-black text-white' : 'bg-transparent'} border-black flex-shrink-0 min-w-auto text-xs sm:text-sm lg:text-xs font-semibold px-4 py-1 md:px-5 md:py-2 lg:px-5 lg:py- border-[2px] hover:bg-black hover:text-white duration-200 ease-linear rounded-3xl cursor-pointer`}
               >
                 {category.nama}
               </div>

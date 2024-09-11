@@ -13,14 +13,14 @@ import Image from "next/image";
 import Swal from "sweetalert2";
 import store from "../redux/store";
 
-type RootState = ReturnType<typeof store.getState>;
+export type RootStateCart = ReturnType<typeof store.getState>;
 
 export default function CartTransaction() {
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState<ProductType[]>([]);
   const dispatch = useDispatch();
 
-  const cartItems = useSelector((state: RootState) => state.cart.data);
+  const cartItems = useSelector((state: RootStateCart) => state.cart.data);
 
   const fetchData = async () => {
     const product = await getAllProduct();
@@ -49,7 +49,6 @@ export default function CartTransaction() {
     fetchData();
   }, [cartItems]);
 
-  // console.log(data);
   const totalItem = data.reduce((acc, item) => acc + item.qty, 0);
   const subtotal = data.reduce((acc, item) => acc + item.harga * item.qty, 0);
   const tax = subtotal * 0.1;
@@ -88,8 +87,11 @@ export default function CartTransaction() {
         html,
         icon: "question",
         confirmButtonText: "Confirm",
+        showCancelButton: true,
+        cancelButtonText: "Cancel"
       }).then((res) => {
         if (res.isConfirmed) {
+          dispatch(clear())
           Swal.fire({
             title: "Order Success",
             text: "Your order has been successfully placed.",
@@ -103,12 +105,12 @@ export default function CartTransaction() {
 
   return (
     <div
-      className="w-[300px] shadow-2xl bg-white fixed right-0 top-0 h-full scrollbar-none overflow-y-auto"
+      className="w-[300px] shadow-2xl bg-white fixed right-0 top-0 h-full overflow-y-auto"
       style={{ scrollbarWidth: "none" }}
     >
       <div className="pt-8 px-4">
         <div className="flex justify-between items-center mb-2">
-          <h2 className="text-lg font-semibold">Order Items</h2>
+          <h2 className="text-lg font-semibold">Order Items {totalItem ? `(${totalItem})` : ""}</h2>
           {data.length > 0 && (
             <p
               onClick={() => dispatch(clear())}
@@ -142,33 +144,37 @@ export default function CartTransaction() {
 
         {data.length > 0 && !isLoading && (
           <div className="mt-4">
-          <h2 className="text-lg font-semibold mb-2 text-slate-600">
-            Order Summary
-          </h2>
-          <div className="h-[2px] w-full bg-slate-100 mb-4" />
-          <div className="w-full flex justify-between items-center text-xs">
-            <p className="font-medium text-slate-800">Total items</p>
-            <p className="text-semibold">{totalItem} item</p>
+            <h2 className="text-lg font-semibold mb-2 text-slate-600">
+              Order Summary
+            </h2>
+            <div className="h-[2px] w-full bg-slate-100 mb-4" />
+            <div className="w-full flex justify-between items-center text-xs">
+              <p className="font-medium text-slate-800">Total items</p>
+              <p className="text-semibold">{totalItem} item</p>
+            </div>
+            <div className="w-full flex justify-between items-center text-xs">
+              <p className="font-medium text-slate-800">Subtotal</p>
+              <p className="text-semibold">{rupiahFormat(subtotal)}</p>
+            </div>
+            <div className="w-full flex justify-between items-center text-xs">
+              <p className="font-medium text-slate-800">Tax</p>
+              <p className="text-semibold">10% - {rupiahFormat(tax)}</p>
+            </div>
+            <div className="w-full flex justify-between items-center text-xs">
+              <p className="font-medium text-slate-800">Customer</p>
+              <p className="text-semibold">Kevin Andra</p>
+            </div>
+            <div className="h-[2px] w-full bg-slate-100 my-4" />
+            <div className="flex justify-between items-center">
+              <h1 className="font-semibold text-slate-800">Total</h1>
+              <h1 className="font-semibold">{rupiahFormat(total)}</h1>
+            </div>
+            <div className="my-4 w-full">
+              <Button className="w-full py-2" onClick={() => handleOrder()}>
+                Place Order
+              </Button>
+            </div>
           </div>
-          <div className="w-full flex justify-between items-center text-xs">
-            <p className="font-medium text-slate-800">Subtotal</p>
-            <p className="text-semibold">{rupiahFormat(subtotal)}</p>
-          </div>
-          <div className="w-full flex justify-between items-center text-xs">
-            <p className="font-medium text-slate-800">Tax</p>
-            <p className="text-semibold">10% - {rupiahFormat(tax)}</p>
-          </div>
-          <div className="h-[2px] w-full bg-slate-100 my-4" />
-          <div className="flex justify-between items-center">
-            <h1 className="font-semibold text-slate-800">Total</h1>
-            <h1 className="font-semibold">{rupiahFormat(total)}</h1>
-          </div>
-          <div className="my-4 w-full">
-            <Button className="w-full py-2" onClick={() => handleOrder()}>
-              Place Order
-            </Button>
-          </div>
-        </div>
         )}
       </div>
     </div>
@@ -186,7 +192,10 @@ function Card({ data }: { data: ProductType[] }) {
   };
 
   return (
-    <>
+    <div
+      className="w-full max-h-[20rem] xl:max-h-[12rem] overflow-y-auto"
+      style={{ scrollbarWidth: "none" }}
+    >
       {data.map((item: ProductType) => (
         <div key={item.id} className="flex gap-x-2 mb-4">
           <Image
@@ -199,13 +208,13 @@ function Card({ data }: { data: ProductType[] }) {
           />
           <div className="flex-grow py-1">
             <div className="flex justify-between">
-              <h1 className="text-sm font-semibold">{item.nama}</h1>
+              <h1 className="text-xs font-semibold">{item.nama.length > 20 ? `${item.nama.substring(0, 20)}...` : item.nama}</h1>
               <Trash2
                 className="w-4 h-4 text-red-500 cursor-pointer"
                 onClick={() => dispatch(deleteById(item.id))}
               />
             </div>
-            <p className="text-xs font-medium text-slate-500">
+            <p className="text-[11px] font-medium text-slate-500">
               {rupiahFormat(item.harga)}
             </p>
             <div className="flex justify-between items-center mt-1">
@@ -229,6 +238,6 @@ function Card({ data }: { data: ProductType[] }) {
           </div>
         </div>
       ))}
-    </>
+    </div>
   );
 }

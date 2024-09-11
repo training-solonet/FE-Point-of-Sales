@@ -2,8 +2,6 @@ import "./globals.css";
 import { Poppins } from "next/font/google";
 import Sidebar from "@/components/layout/navbar";
 import Container from "@/components/layout/container";
-import QCProvider from "./provider/query-provider";
-import ProductProvider from "./provider/product-provider";
 import { Metadata } from "next";
 
 const poppins = Poppins({
@@ -22,16 +20,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${poppins.className} bg-background text-foreground`} suppressHydrationWarning={true}>
+      <body
+        className={`${poppins.className} bg-background text-foreground`}
+        suppressHydrationWarning={true}
+      >
         <div className="flex flex-col sm:flex-row gap-x-8">
           <Sidebar />
-          <Container>
-            <QCProvider>
-              <ProductProvider>
-                {children}
-                </ProductProvider>
-            </QCProvider>
-          </Container>
+          <Container>{children}</Container>
         </div>
       </body>
     </html>
