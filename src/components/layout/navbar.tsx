@@ -14,7 +14,7 @@ export default function Sidebar() {
   return (
     <>
       <div className="min-h-screen bg-fixed w-12 group fixed xl:block hidden z-20">
-        <div className="flex flex-col top-0 gap-y-5 pt-3 pl-3 w-full min-h-screen bg-black text-white absolute z-50">
+        <div className="flex flex-col top-0 gap-y-5 pt-3 pl-3 w-full min-h-screen bg-gray-600 text-white absolute z-50">
           <Link href="/" className="mb-4">
             <Menu />
           </Link>
@@ -29,7 +29,7 @@ export default function Sidebar() {
           </Link>
         </div>
 
-        <div className="absolute lg:flex top-0 left-12 hidden flex-col gap-y-5 pt-[14px] min-h-screen bg-black w-40 text-white transition-transform duration-300 transform -translate-x-full group-hover:translate-x-0">
+        <div className="absolute lg:flex top-0 left-12 hidden flex-col gap-y-5 pt-[14px] min-h-screen bg-gray-600 w-40 text-white transition-transform duration-300 transform -translate-x-full group-hover:translate-x-0">
           <div className="font-medium mb-4">
             <p>Menu</p>
           </div>
@@ -45,7 +45,7 @@ export default function Sidebar() {
         </div>
       </div>
 
-      <div className="hidden lg:block xl:hidden w-full bottom-0 fixed bg-black z-10">
+      <div className="hidden lg:block xl:hidden w-full bottom-0 fixed bg-gray-600 z-10">
         <div className="w-full h-12 flex justify-between items-center px-16">
           <p className="text-white font-medium text-sm">Point of Sales</p>
           <div className="flex gap-x-8 justify-center items-center text-white">
@@ -62,7 +62,7 @@ export default function Sidebar() {
         </div>
       </div>
 
-      <div className="block sm:hidden w-full px-4 py-3 bg-black text-white">
+      <div className="block sm:hidden w-full px-4 py-3 bg-gray-600 text-white">
         <div className="flex justify-between items-center">
           <p className="font-medium text-sm">Point of Sales</p>
           <Menu onClick={toggleSidebar} />
@@ -70,14 +70,14 @@ export default function Sidebar() {
           {isOpen && (
             <>
               <div
-                className="bg-black h-screen bg-opacity-25 fixed inset-0 w-full"
+                className="bg-gray-600 h-screen bg-opacity-25 fixed inset-0 w-full"
                 onClick={toggleSidebar}
               />
             </>
           )}
 
           <div
-            className={`absolute sm:hidden top-0 right-0 pt-3 min-h-screen bg-black w-[70%] text-white transition-transform duration-300 transform ${
+            className={`absolute sm:hidden top-0 right-0 pt-3 min-h-screen bg-gray-600 w-[70%] text-white transition-transform duration-300 transform ${
               isOpen ? "translate-x-0" : "translate-x-full"
             }`}
           >
