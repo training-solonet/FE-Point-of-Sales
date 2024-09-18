@@ -75,15 +75,13 @@ export default function CardProduct({ searchValue }: { searchValue: string }) {
 
   return (
     <>
-      {isLoading && products.length === 0 && (
-        <h1
-          className={`text-lg font-semibold mt-8 w-full ${
-            products.length === 0 && "mb-4"
-          }`}
-        >
-          Products
-        </h1>
-      )}
+      <h1
+        className={`text-lg font-semibold mt-8 w-full ${
+          products.length === 0 && "mb-4"
+        }`}
+      >
+        Products
+      </h1>
 
       {!isLoading && products.length > 0 && (
         <p className="text-xs font-semibold text-slate-800 mb-4">

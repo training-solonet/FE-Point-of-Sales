@@ -22,23 +22,24 @@ export default function CartTransaction() {
   const dispatch = useDispatch();
   const { push } = useRouter();
 
-  const cartItems = useSelector((state: RootStateCart) => state.cart.data);
-
-  const fetchData = async () => {
-    const product = await getAllProduct();
-    const cartItemsString = localStorage.getItem("CART_ITEMS");
-    const cartItems = cartItemsString ? JSON.parse(cartItemsString) : [];
-
-    if (product) {
-      const productInCart = cartItems;
-      setData(productInCart);
-    }
-    setIsLoading(false);
-  };
+  const cartItemsRedux = useSelector((state: RootStateCart) => state.cart.data);
 
   useEffect(() => {
+    const fetchData = async () => {
+      const cartItemsString = localStorage.getItem("CART_ITEMS");
+      const cartItems = cartItemsString ? JSON.parse(cartItemsString) : [];
+
+      const productCheckout = cartItems.map((cartItem: ProductType) => ({
+        ...cartItem,
+        qty: cartItem.qty || 0,
+      }));
+
+      setData(productCheckout);
+      setIsLoading(false);
+    };
+
     fetchData();
-  }, [cartItems]);
+  }, [cartItemsRedux]);
 
   const totalItem = data.reduce((acc, item) => acc + item.qty, 0);
   const subtotal = data.reduce((acc, item) => acc + item.harga * item.qty, 0);
@@ -159,7 +160,7 @@ function Card({ data }: { data: ProductType[] }) {
           <div className="flex-grow py-1">
             <div className="flex justify-between">
               <h1 className="text-xs font-semibold">
-                {item.nama.length > 20
+                {item?.nama?.length > 20
                   ? `${item.nama.substring(0, 20)}...`
                   : item.nama}
               </h1>
