@@ -30,18 +30,7 @@ export default function CartTransaction() {
     const cartItems = cartItemsString ? JSON.parse(cartItemsString) : [];
 
     if (product) {
-      const productInCart = product
-        .map((p: ProductType) => {
-          const cartItem = cartItems.find(
-            (item: ProductType) => item.id === p.id
-          );
-          return {
-            ...p,
-            qty: cartItem ? cartItem.qty : 0,
-          };
-        })
-        .filter((item: ProductType) => item.qty > 0);
-
+      const productInCart = cartItems;
       setData(productInCart);
     }
     setIsLoading(false);

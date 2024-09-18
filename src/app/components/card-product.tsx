@@ -37,6 +37,9 @@ export default function CardProduct({ searchValue }: { searchValue: string }) {
       addToCart({
         id: product,
         qty: 1,
+        nama: products.find((item) => item.id === product)?.nama || "",
+        gambar: "https://via.placeholder.com/300x300?text=Image+Product+1:1",
+        harga: products.find((item) => item.id === product)?.harga || 0,
       })
     );
   };
