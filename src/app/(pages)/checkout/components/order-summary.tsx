@@ -8,6 +8,7 @@ import { useToast } from "@/hooks/useToast";
 import OrderItem from "./order-item";
 import PaymentMethod from "./payment-method";
 import CustomerSearch from "./customer-search";
+import FormNewCustomer from "./form-new-customer";
 
 interface OrderSummaryProps {
   product: ProductType[];
@@ -22,6 +23,7 @@ export default function OrderSummary({ product }: OrderSummaryProps) {
     no_hp: "",
     alamat: "",
     isLoading: false,
+    isNewCustomer: false,
   });
 
   const subTotal = product.reduce(
@@ -34,7 +36,7 @@ export default function OrderSummary({ product }: OrderSummaryProps) {
   const handleCheckout = async () => {
     let orderData;
 
-    if (form.no_hp !== "" && form.alamat !== "") {
+    if (form.no_hp !== "" && form.alamat !== "" && form.isNewCustomer === true) {
       orderData = {
         customer_name: form.customer,
         no_hp: form.no_hp,
@@ -75,6 +77,14 @@ export default function OrderSummary({ product }: OrderSummaryProps) {
         );
         setForm({ ...form, isLoading: false });
         return;
+      } else if (form.isNewCustomer === true && form.no_hp === "" && form.alamat === "") {
+        showToast(
+          "error",
+          "Transaction failed!",
+          "Add Phone number and Address before making a transactions"
+        );
+        setForm({ ...form, isLoading: false });
+        return;
       }
 
       await SubmitOrder(orderData);
@@ -85,7 +95,7 @@ export default function OrderSummary({ product }: OrderSummaryProps) {
         showConfirmButton: true,
         timer: 2500,
       }).then(() => {
-        // push("/detail-order");
+        push(`/order-success?nama=${form.customer}&payment=${form.payment}`);
       });
       setForm({ ...form, isLoading: false });
     } catch (err) {
@@ -125,8 +135,15 @@ export default function OrderSummary({ product }: OrderSummaryProps) {
         <h1 className="text-lg font-semibold">Payment and Customer Details</h1>
         <div className="flex justify-between mt-3 mb-5">
           <PaymentMethod form={form} setForm={setForm} />
-          <CustomerSearch form={form} setForm={setForm} />
+          {form.isNewCustomer === false && (
+            <CustomerSearch form={form} setForm={setForm} />
+          )}
         </div>
+        {form.isNewCustomer === true && (
+          <div className="mb-5">
+            <FormNewCustomer form={form} setForm={setForm} />
+          </div>
+        )}
       </div>
       <hr />
       <div className="mt-2 flex justify-between text-black font-bold text-xl">

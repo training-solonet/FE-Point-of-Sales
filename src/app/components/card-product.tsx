@@ -18,6 +18,7 @@ export interface ProductType {
   gambar: string;
   harga: number;
   qty: number;
+  stok: number;
 }
 
 export type RootStateCategory = ReturnType<typeof store.getState>;
@@ -40,6 +41,7 @@ export default function CardProduct({ searchValue }: { searchValue: string }) {
         nama: products.find((item) => item.id === product)?.nama || "",
         gambar: "https://via.placeholder.com/300x300?text=Image+Product+1:1",
         harga: products.find((item) => item.id === product)?.harga || 0,
+        stok: products.find((item) => item.id === product)?.stok || 0,
       })
     );
   };
@@ -134,22 +136,26 @@ export default function CardProduct({ searchValue }: { searchValue: string }) {
                   : data.nama}
               </h1>
               <p className="text-[9px]">{data.kategori}</p>
+              <p className="text-[10.5px] font-semibold">
+                {data.stok ? data.stok + " in stock" : "Out of stock!"}
+              </p>
             </div>
             <div className="w-full px-2 mt-1 flex flex-row justify-between items-end">
               <p className="text-slate-700 font-semibold text-xs">
                 {rupiahFormat(data.harga)}
               </p>
-              {cartItems.find((item) => item.id === data.id) ? (
-                <Trash
-                  onClick={() => dispatch(deleteById(data.id))}
-                  className="size-7 text-white bg-black rounded-2xl p-[6px] cursor-pointer"
-                />
-              ) : (
-                <Plus
-                  onClick={() => handleAddToCart(data.id)}
-                  className="size-7 text-white bg-black rounded-2xl p-[6px] cursor-pointer"
-                />
-              )}
+              {data.stok > 0 &&
+                (cartItems.find((item) => item.id === data.id) ? (
+                  <Trash
+                    onClick={() => dispatch(deleteById(data.id))}
+                    className="size-7 text-white bg-black rounded-2xl p-[6px] cursor-pointer"
+                  />
+                ) : (
+                  <Plus
+                    onClick={() => handleAddToCart(data.id)}
+                    className="size-7 text-white bg-black rounded-2xl p-[6px] cursor-pointer"
+                  />
+                ))}
             </div>
           </div>
         ))}

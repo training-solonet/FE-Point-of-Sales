@@ -2,7 +2,6 @@
 
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
-import { getAllProduct } from "../lib/data";
 import { rupiahFormat } from "@/lib/utils";
 import { useDispatch, useSelector } from "react-redux";
 import { clear, decrement, deleteById, increment } from "../redux/cartSlice";

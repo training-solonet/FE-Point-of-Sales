@@ -6,6 +6,7 @@ interface CartItem {
   nama: string;
   gambar: string;
   harga: number;
+  stok: number;
 }
 
 const initialState: { data: CartItem[] } = {
