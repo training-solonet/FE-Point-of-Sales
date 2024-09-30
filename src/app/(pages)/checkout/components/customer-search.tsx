@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Plus, Search, User } from "lucide-react";
 import { getCustomer } from "../lib/data";
+import { FormProps } from "./order-summary";
 
 interface CustomerType {
   id: number;
@@ -10,8 +11,8 @@ interface CustomerType {
 }
 
 interface CustomerSearchProps {
-  form: { customer: string; };
-  setForm: (form: any) => void;
+  form: FormProps;
+  setForm: (form: FormProps) => void;
 }
 
 const CustomerSearch = ({ form, setForm }: CustomerSearchProps) => {

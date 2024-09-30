@@ -1,16 +1,10 @@
 import { Input } from "@/components/ui/input";
 import { House, Phone, SearchIcon, User } from "lucide-react";
-
-interface NewCustomerType {
-  id: number;
-  nama: string;
-  no_hp: string;
-  alamat: string;
-}
+import { FormProps } from "./order-summary";
 
 interface NewCustomerProps {
-  form: { customer: string };
-  setForm: (form: any) => void;
+  form: FormProps;
+  setForm: (form: FormProps) => void;
 }
 
 const FormNewCustomer = ({ form, setForm }: NewCustomerProps) => {

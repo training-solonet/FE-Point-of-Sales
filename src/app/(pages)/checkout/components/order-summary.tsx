@@ -14,6 +14,15 @@ interface OrderSummaryProps {
   product: ProductType[];
 }
 
+export interface FormProps {
+  payment: string,
+  customer: string,
+  no_hp: string,
+  alamat: string,
+  isLoading: boolean,
+  isNewCustomer: boolean,
+}
+
 export default function OrderSummary({ product }: OrderSummaryProps) {
   const { push } = useRouter();
   const { showToast } = useToast();

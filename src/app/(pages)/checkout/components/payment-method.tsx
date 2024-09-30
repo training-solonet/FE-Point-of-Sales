@@ -1,8 +1,9 @@
 import { Banknote, Coins, CreditCard } from "lucide-react";
+import { FormProps } from "./order-summary";
 
 interface PaymentMethodProps {
-    form: { payment: string },
-    setForm: (form: any) => void
+    form: FormProps,
+    setForm: (form: FormProps) => void
 }
 
 const PaymentMethod = ({ form, setForm }: PaymentMethodProps) => {
