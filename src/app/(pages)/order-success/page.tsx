@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { ChevronLeft, Printer } from "lucide-react";
 import { rupiahFormat } from "@/lib/utils";
 import { RootStateCart } from "@/app/components/cart-transaction";
+import { clear } from "@/app/redux/cartSlice";
 
 interface ProductType {
   id: string;
@@ -20,18 +21,19 @@ export default function OrderSuccess() {
   const cartItemsRedux = useSelector((state: RootStateCart) => state.cart.data);
   const q = useSearchParams();
   const router = useRouter();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchData = async () => {
-        const cartItemsString = localStorage.getItem("CART_ITEMS");
-        const cartItems = cartItemsString ? JSON.parse(cartItemsString) : [];
+      const cartItemsString = localStorage.getItem("CART_ITEMS");
+      const cartItems = cartItemsString ? JSON.parse(cartItemsString) : [];
 
-        const productCheckout = cartItems.map((cartItem: ProductType) => ({
-          ...cartItem,
-          qty: cartItem.qty || 0,
-        }));
+      const productCheckout = cartItems.map((cartItem: ProductType) => ({
+        ...cartItem,
+        qty: cartItem.qty || 0,
+      }));
 
-        setData(productCheckout);
+      setData(productCheckout);
     };
 
     fetchData();
@@ -49,6 +51,10 @@ export default function OrderSuccess() {
   const totalItem = data.reduce((acc, item) => acc + item.qty, 0);
   const subtotal = data.reduce((acc, item) => acc + item.harga * item.qty, 0);
 
+  const handleToHome = () => {
+    dispatch(clear())
+    router.push("/");
+  };
 
   return (
     <section className="my-10 flex justify-center">
@@ -109,15 +115,13 @@ export default function OrderSuccess() {
 
         <div className="flex justify-between text-center mt-5">
           <button
-            onClick={() => router.push("/")}
+            onClick={() => handleToHome()}
             className="bg-[#00D39B] flex text-white px-2 py-2 rounded-md font-semibold"
           >
             <ChevronLeft className="size-5 mr-1" />
             <span>Back to Home</span>
           </button>
-          <button
-            className="bg-[#003fd3] flex text-white px-4 py-2 rounded-md font-semibold"
-          >
+          <button className="bg-[#003fd3] flex text-white px-4 py-2 rounded-md font-semibold">
             <Printer className="mr-3" />
             Print
           </button>
