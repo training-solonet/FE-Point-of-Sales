@@ -6,10 +6,9 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export const rupiahFormat = (value: number) => {
-  return new Intl.NumberFormat("id-ID", {
-    style: "currency",
-    currency: "IDR",
-  }).format(value);
+  const roundedValue = Math.round(value);
+
+  return "Rp " + roundedValue.toLocaleString("id-ID");
 }
 
 export const getFormattedDate: () => string = () => {

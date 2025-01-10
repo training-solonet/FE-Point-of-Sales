@@ -10,7 +10,6 @@ import { RootStateCart } from "@/app/components/cart-transaction";
 import { clear } from "@/app/redux/cartSlice";
 import { ProductType } from "@/app/components/card-product";
 import PrintContent from "./components/content-print";
-import generatePDF from "./components/generate-pdf";
 
 export default function OrderSuccess() {
   const [data, setData] = useState<ProductType[]>([]);
@@ -54,20 +53,26 @@ export default function OrderSuccess() {
   };
 
   const handlePrint = () => {
-    generatePDF({ customer: customerName, payment: paymentMethod, product: data, orderId: "#123", discountRate: 0, taxRate: 10 });
-    // if (printRef.current) {
-    //   const printContents = printRef.current.innerHTML;
-    //   const originalContents = document.body.innerHTML;
-
-    //   document.body.innerHTML = printContents;
-
-    //   window.print();
-    //   window.addEventListener("click", () => {
-    //     document.body.innerHTML = originalContents;
-    //     window.location.reload();
-    //   });
-    // }
+    if (printRef.current) {
+      const printContents = printRef.current.innerHTML;
+      const originalContents = document.body.innerHTML;
+  
+      document.body.innerHTML = printContents;
+  
+      const afterPrintHandler = () => {
+        document.body.innerHTML = originalContents;
+        window.removeEventListener("afterprint", afterPrintHandler);
+        window.location.reload();
+      };
+  
+      window.addEventListener("afterprint", afterPrintHandler);
+  
+      setTimeout(() => {
+        window.print();
+      }, 500);
+    }
   };
+    
 
   const customerName = q?.get("nama") || "Guest";
   const paymentMethod = q?.get("payment") || "Unknown";

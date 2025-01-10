@@ -36,23 +36,23 @@ export default function PrintContent({
   const total = subtotalAfterDiscount + tax;
 
   return (
-    <div style={{ width: "full", padding: "5mm" }}>
+    <div className="w-full h-auto pr-[11px]">
       <div className="flex justify-between items-center flex-wrap">
-        <p className="font-semibold text-[9px]">Point Of Sales</p>
-        <p className="font-semibold text-[9px]">
+        <p className="font-semibold text-[12px]">Point Of Sales</p>
+        <p className="font-semibold text-[12px]">
           {orderId}
         </p>
       </div>
-      <p className="font-medium text-[5px]">{formattedDate}</p>
+      <p className="font-medium text-[10px]">{formattedDate}</p>
 
       <div className="mt-4">
         <div className="flex justify-between items-center flex-wrap">
-          <p className="font-semibold text-[4px]">Customer</p>
-          <p className="font-medium text-[4px]">{customer}</p>
+          <p className="font-semibold text-[9px]">Customer</p>
+          <p className="font-medium text-[9px]">{customer}</p>
         </div>
         <div className="flex justify-between items-center flex-wrap">
-          <p className="font-semibold text-[4px]">Payment</p>
-          <p className="font-medium text-[4px]">{payment}</p>
+          <p className="font-semibold text-[9px]">Payment</p>
+          <p className="font-medium text-[9px]">{payment}</p>
         </div>
       </div>
 
@@ -62,13 +62,14 @@ export default function PrintContent({
         <ul className="space-y-1">
           {product.map((item) => (
             <li
-              className="flex justify-between items-center flex-wrap text-[4px]"
+              className="flex flex-col flex-wrap text-[9px]"
               key={item.id}
             >
-              <span>{item.nama}</span>
-              <span>
-                {item.qty} x {rupiahFormat(item.harga)}
-              </span>
+              <span className="font-semibold">{item.nama}</span>
+              <div className="font-medium flex justify-between">
+                <span>{rupiahFormat(item.harga)} x {item.qty}</span>
+                <span>{rupiahFormat(item.harga * item.qty)}</span>
+              </div>
             </li>
           ))}
         </ul>
@@ -78,32 +79,32 @@ export default function PrintContent({
 
       <div className="mt-4 flex flex-col gap-y-0">
         <div className="flex justify-between items-center flex-wrap">
-          <p className="font-semibold text-[4px]">Subtotal</p>
-          <p className="font-medium text-[4px]">{rupiahFormat(subtotal)}</p>
+          <p className="font-semibold text-[9px]">Subtotal</p>
+          <p className="font-medium text-[9px]">{rupiahFormat(subtotal)}</p>
         </div>
         <div className="flex justify-between items-center flex-wrap">
-          <p className="font-semibold text-[4px]">Discount ({discountRate}%)</p>
-          <p className="font-medium text-[4px]">-{rupiahFormat(discount)}</p>
+          <p className="font-semibold text-[9px]">Discount ({discountRate}%)</p>
+          <p className="font-medium text-[9px]">-{rupiahFormat(discount)}</p>
         </div>
         <div className="flex justify-between items-center flex-wrap">
-          <p className="font-semibold text-[4px]">Tax ({taxRate}%)</p>
-          <p className="font-medium text-[4px]">{rupiahFormat(tax)}</p>
+          <p className="font-semibold text-[9px]">Tax ({taxRate}%)</p>
+          <p className="font-medium text-[9px]">{rupiahFormat(tax)}</p>
         </div>
         <div className="flex justify-between items-center flex-wrap">
-          <p className="font-semibold text-[4px]">Total</p>
-          <p className="font-medium text-[4px]">{rupiahFormat(total)}</p>
+          <p className="font-semibold text-[9px]">Total</p>
+          <p className="font-medium text-[9px]">{rupiahFormat(total)}</p>
         </div>
       </div>
 
       <div className="mt-4">
-        <p className="text-center text-[3px] font-medium">
+        <p className="text-center text-[9px] font-medium">
           Thank you for your purchase!
         </p>
-        <p className="text-center text-[3px]">
+        <p className="text-center text-[9px]">
           For any inquiries, contact us at{" "}
           <span className="font-semibold">support@pos.com</span>.
         </p>
-        <p className="text-center text-[3px]">Have a great day!</p>
+        <p className="text-center text-[9px]">Have a great day!</p>
       </div>
     </div>
   );
