@@ -21,6 +21,9 @@ export default function OrderSuccess() {
   const dispatch = useDispatch();
   const printRef = useRef<HTMLDivElement>(null);
 
+  const discountRate = 10; // Default discount rate (10%)
+  const taxRate = 10; // Default tax rate (10%)
+
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true); 
@@ -44,8 +47,11 @@ export default function OrderSuccess() {
     fetchData();
   }, [cartItemsRedux, router]);
 
-  const totalItem = data.reduce((acc, item) => acc + item.qty, 0);
   const subtotal = data.reduce((acc, item) => acc + item.harga * item.qty, 0);
+  const discount = (discountRate / 100) * subtotal;
+  const subtotalAfterDiscount = subtotal - discount;
+  const tax = (taxRate / 100) * subtotalAfterDiscount;
+  const total = subtotalAfterDiscount + tax;
 
   const handleToHome = () => {
     dispatch(clear());
@@ -56,9 +62,9 @@ export default function OrderSuccess() {
     if (printRef.current) {
       const printContents = printRef.current.innerHTML;
       const originalContents = document.body.innerHTML;
-  
+
       document.body.innerHTML = printContents;
-  
+      
       const afterPrintHandler = () => {
         document.body.innerHTML = originalContents;
         window.removeEventListener("afterprint", afterPrintHandler);
@@ -72,7 +78,6 @@ export default function OrderSuccess() {
       }, 500);
     }
   };
-    
 
   const customerName = q?.get("nama") || "Guest";
   const paymentMethod = q?.get("payment") || "Unknown";
@@ -136,10 +141,10 @@ export default function OrderSuccess() {
             <hr className="my-4" />
 
             <div className="mt-4 text-right">
-              <p className="text-lg font-semibold">Total Items: {totalItem}</p>
-              <p className="text-lg font-semibold">
-                Subtotal: {rupiahFormat(subtotal)}
-              </p>
+              <p className="text-lg font-semibold">Subtotal: {rupiahFormat(subtotal)}</p>
+              <p className="text-lg font-semibold">Discount ({discountRate}%): -{rupiahFormat(discount)}</p>
+              <p className="text-lg font-semibold">Tax ({taxRate}%): {rupiahFormat(tax)}</p>
+              <p className="text-xl font-bold">Total: {rupiahFormat(total)}</p>
             </div>
           </div>
         </div>
@@ -169,6 +174,8 @@ export default function OrderSuccess() {
             orderId={"#152"}
             payment={paymentMethod}
             product={data}
+            discountRate={discountRate}
+            taxRate={taxRate}
           />
         </div>
       </div>
