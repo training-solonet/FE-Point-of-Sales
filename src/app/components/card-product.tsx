@@ -41,6 +41,7 @@ export default function CardProduct({ searchValue }: { searchValue: string }) {
         gambar: "https://via.placeholder.com/300x300?text=Image+Product+1:1",
         harga: products.find((item) => item.id === product)?.harga || 0,
         stok: products.find((item) => item.id === product)?.stok || 0,
+        upc: products.find((item) => item.id === product)?.upc || "",
       })
     );
   };

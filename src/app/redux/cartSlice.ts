@@ -1,12 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface CartItem {
+export interface CartItem {
   id: number;
   qty: number;
   nama: string;
   gambar: string;
   harga: number;
   stok: number;
+  upc: string;
 }
 
 const initialState: { data: CartItem[] } = {

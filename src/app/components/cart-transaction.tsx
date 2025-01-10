@@ -134,8 +134,23 @@ export default function CartTransaction() {
 function Card({ data }: { data: ProductType[] }) {
   const dispatch = useDispatch();
   const incrementQty = (item: number) => {
-    dispatch(increment(item));
-  };
+    const product = data.find((product) => product.id === item);
+    if (product) {
+      const availableStock = product.stok;
+      const currentQty = product.qty;
+  
+      if (currentQty < availableStock) {
+        dispatch(increment(item));
+      } else {
+        Swal.fire({
+          title: "Stock is limited!",
+          text: `Only ${availableStock} items available.`,
+          icon: "warning",
+          confirmButtonText: "OK",
+        });
+      }
+    }
+  };  
 
   const decrementQty = (item: number) => {
     dispatch(decrement(item));
