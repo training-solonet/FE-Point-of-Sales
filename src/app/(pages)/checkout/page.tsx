@@ -33,7 +33,7 @@ export default function CheckoutPage() {
     };
 
     fetchData();
-  }, [cartItemsRedux]);
+  }, [cartItemsRedux, router]);
 
   return (
     <section className="my-10 flex justify-center">

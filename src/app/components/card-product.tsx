@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addToCart, deleteById } from "../redux/cartSlice";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { getBestSeller, getProductByCategory } from "../lib/data";
+import { getProductByCategory } from "../lib/data";
 import SkeletonLoader from "./skeleton-loader";
 import { Plus, Trash } from "lucide-react";
 import store from "../redux/store";

@@ -10,10 +10,12 @@ import { RootStateCart } from "@/app/components/cart-transaction";
 import { clear } from "@/app/redux/cartSlice";
 import { ProductType } from "@/app/components/card-product";
 import PrintContent from "./components/content-print";
+import generatePDF from "./components/generate-pdf";
 
 export default function OrderSuccess() {
   const [data, setData] = useState<ProductType[]>([]);
   const [currentDate, setCurrentDate] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
   const cartItemsRedux = useSelector((state: RootStateCart) => state.cart.data);
   const q = useSearchParams();
   const router = useRouter();
@@ -21,21 +23,27 @@ export default function OrderSuccess() {
   const printRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const cartItemsString = localStorage.getItem("CART_ITEMS");
-    const cartItems = cartItemsString ? JSON.parse(cartItemsString) : [];
+    const fetchData = async () => {
+      setIsLoading(true); 
+      const cartItemsString = localStorage.getItem("CART_ITEMS");
+      const cartItems = cartItemsString ? JSON.parse(cartItemsString) : [];
 
-    if (cartItems.length === 0) {
-      router.push("/");
-    }
+      if (cartItems.length === 0) {
+        router.push("/");
+      }
 
-    const productCheckout = cartItems.map((cartItem: ProductType) => ({
-      ...cartItem,
-      qty: cartItem.qty || 0,
-    }));
+      const productCheckout = cartItems.map((cartItem: ProductType) => ({
+        ...cartItem,
+        qty: cartItem.qty || 0,
+      }));
 
-    setData(productCheckout);
-    setCurrentDate(getFormattedDate());
-  }, [cartItemsRedux]);
+      setData(productCheckout);
+      setCurrentDate(getFormattedDate());
+      setIsLoading(false);
+    };
+
+    fetchData();
+  }, [cartItemsRedux, router]);
 
   const totalItem = data.reduce((acc, item) => acc + item.qty, 0);
   const subtotal = data.reduce((acc, item) => acc + item.harga * item.qty, 0);
@@ -46,24 +54,34 @@ export default function OrderSuccess() {
   };
 
   const handlePrint = () => {
-    if (printRef.current) {
-      const printContents = printRef.current.innerHTML;
-      const originalContents = document.body.innerHTML;
+    generatePDF({ customer: customerName, payment: paymentMethod, product: data, orderId: "#123", discountRate: 0, taxRate: 10 });
+    // if (printRef.current) {
+    //   const printContents = printRef.current.innerHTML;
+    //   const originalContents = document.body.innerHTML;
 
-      document.body.innerHTML = printContents;
+    //   document.body.innerHTML = printContents;
 
-      window.print();
-      window.addEventListener("click", () => {
-        document.body.innerHTML = originalContents;
-      });
-    }
+    //   window.print();
+    //   window.addEventListener("click", () => {
+    //     document.body.innerHTML = originalContents;
+    //     window.location.reload();
+    //   });
+    // }
   };
 
   const customerName = q?.get("nama") || "Guest";
   const paymentMethod = q?.get("payment") || "Unknown";
 
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <p className="text-gray-500 text-lg font-medium">Loading...</p>
+      </div>
+    );
+  }
+
   return (
-    <section className="my-10 flex justify-center">
+    <section className="my-3 flex justify-center">
       <div className="xl:w-[50%] md:w-[80%] bg-white rounded-2xl p-8 shadow-2xl">
         <div>
           <div className="w-full flex flex-col justify-center items-center">
@@ -91,7 +109,9 @@ export default function OrderSuccess() {
                   Payment Method: {paymentMethod}
                 </p>
               </div>
-              <p className="text-gray-500 font-semibold text-sm">{currentDate}</p>
+              <p className="text-gray-500 font-semibold text-sm">
+                {currentDate}
+              </p>
             </div>
           </div>
 
@@ -129,7 +149,9 @@ export default function OrderSuccess() {
           </button>
           <button
             onClick={() => handlePrint()}
-            className="bg-[#003fd3] flex items-center text-white px-4 py-2 rounded-md font-semibold"
+            className={`${
+              data.length === 0 ? "bg-gray-300" : "bg-[#003fd3]"
+            } flex items-center text-white px-4 py-2 rounded-md font-semibold`}
           >
             <PrinterIcon className="mr-3" />
             <p className="text-sm">Print</p>
