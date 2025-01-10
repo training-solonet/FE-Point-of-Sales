@@ -1,10 +1,10 @@
 "use client";
 
 import { Provider } from "react-redux";
-import CardProduct from "./components/card-product";
-import CartTransaction from "./components/cart-transaction";
-import CategoryList from "./components/category-list";
-import store from "./redux/store";
+import CardProduct from "../components/card-product";
+import CartTransaction from "../components/cart-transaction";
+import CategoryList from "../components/category-list";
+import store from "../redux/store";
 import { useState } from "react";
 import { SearchIcon, X } from "lucide-react";
 import { Input } from "@/components/ui/input";

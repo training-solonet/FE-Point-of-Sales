@@ -28,9 +28,9 @@ export const getAllProduct = async () => {
     }
 }
 
-export const getProductByCategory = async ({ id }: { id: number }) => {
+export const getProductByCategory = async ({ id, nama, upc }: { id: number, nama: string, upc: string }) => {
     try {
-        const res = await axios.get(`https://penjualan.connectis.my.id/api/product?kategori=${id}`);
+        const res = await axios.get(`https://penjualan.connectis.my.id/api/product?kategori=${id}&nama=${nama}&upc=${upc}`);
         return res.data.data
     } catch (err) {
         console.log("Error fetching data: ", err);

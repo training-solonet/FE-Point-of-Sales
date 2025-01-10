@@ -11,3 +11,12 @@ export const rupiahFormat = (value: number) => {
     currency: "IDR",
   }).format(value);
 }
+
+export const getFormattedDate: () => string = () => {
+  const options: Intl.DateTimeFormatOptions = {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  };
+  return new Date().toLocaleDateString("id-ID", options);
+};
