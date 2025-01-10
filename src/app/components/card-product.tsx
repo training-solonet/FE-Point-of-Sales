@@ -9,6 +9,8 @@ import SkeletonLoader from "./skeleton-loader";
 import { Plus, Trash } from "lucide-react";
 import store from "../redux/store";
 import { RootStateCart } from "./cart-transaction";
+import { useToast } from "@/hooks/useToast";
+import Swal from "sweetalert2";
 
 export interface ProductType {
   id: number;
@@ -31,6 +33,7 @@ export default function CardProduct({ searchValue }: { searchValue: string }) {
     (state: RootStateCategory) => state.category.data
   );
   const cartItems = useSelector((state: RootStateCart) => state.cart.data);
+  const { showToast } = useToast();
 
   const handleAddToCart = (product: number) => {
     dispatch(
@@ -57,7 +60,39 @@ export default function CardProduct({ searchValue }: { searchValue: string }) {
             nama: "",
             upc: searchValue,
           });
+          const product = res && res.length > 0 ? res[0] : null;
           setProducts(res || []);
+
+          if (product) {
+            const cartItem = cartItems.find((item) => item.id === product.id);
+            const availableStock = product.stok;
+            const currentQty = cartItem ? cartItem.qty : 0;
+          
+            if (currentQty < availableStock) {
+              dispatch(
+                addToCart({
+                  id: product.id,
+                  qty: 1,
+                  nama: product.nama,
+                  gambar: "https://via.placeholder.com/300x300?text=Image+Product+1:1",
+                  harga: product.harga,
+                  stok: product.stok,
+                  upc: product.upc,
+                })
+              );
+              showToast("success", "Product added to cart", `${product.nama} - ${rupiahFormat(product.harga)}`);
+            } else {
+              Swal.fire({
+                title: "Stock is limited!",
+                text: `Only ${availableStock} items available.`,
+                icon: "warning",
+                confirmButtonText: "OK",
+              });
+            }
+          } else {
+            showToast("error", "Product not found", "UPC not found");
+          }
+          
         } else {
           const res = await getProductByCategory({
             id: selectedCategory.kategori,
