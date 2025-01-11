@@ -112,7 +112,7 @@ export default function CardProduct({ searchValue }: { searchValue: string }) {
     }, 300);
 
     return () => clearTimeout(timeoutId);
-  }, [searchValue, selectedCategory]);
+  }, [searchValue, selectedCategory, cartItems, dispatch, showToast]);
 
   return (
     <>
