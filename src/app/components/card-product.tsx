@@ -1,5 +1,5 @@
 "use client";
-import { rupiahFormat } from "@/lib/utils";
+import { isUPC, rupiahFormat } from "@/lib/utils";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart, deleteById } from "../redux/cartSlice";
 import Image from "next/image";
@@ -48,8 +48,6 @@ export default function CardProduct({ searchValue }: { searchValue: string }) {
       })
     );
   };
-
-  const isUPC = (value: string) => /^[0-9]+$/.test(value);
 
   useEffect(() => {
     const fetchData = async () => {

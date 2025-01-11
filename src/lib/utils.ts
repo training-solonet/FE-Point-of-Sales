@@ -11,6 +11,8 @@ export const rupiahFormat = (value: number) => {
   return "Rp " + roundedValue.toLocaleString("id-ID");
 }
 
+export const isUPC = (value: string) => /^[0-9]+$/.test(value);
+
 export const getFormattedDate: () => string = () => {
   const options: Intl.DateTimeFormatOptions = {
     day: "numeric",

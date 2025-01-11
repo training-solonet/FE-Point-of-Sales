@@ -13,7 +13,7 @@ interface OrderDataType {
   alamat?: string;
 }
 
-export const SubmitOrder = async (orderData: OrderDataType): Promise<void> => {
+export const SubmitOrder = async (orderData: OrderDataType): Promise<{ status: string, message: string }> => {
   try {
     const response = await axios(
       "https://penjualan.connectis.my.id/api/order",
@@ -27,7 +27,7 @@ export const SubmitOrder = async (orderData: OrderDataType): Promise<void> => {
     );
 
     if (response.status >= 200 && response.status < 300) {
-      console.log("Order submitted successfully");
+      return response.data;
     } else {
       throw new Error("Failed to submit order");
     }

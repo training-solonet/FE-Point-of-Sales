@@ -5,6 +5,7 @@ import { Suspense } from "react";
 import { Poppins } from "next/font/google";
 import Sidebar from "@/components/layout/navbar";
 import Container from "@/components/layout/container";
+import { usePathname } from "next/navigation";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -16,6 +17,10 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const pathname = usePathname();
+
+  const hideSidebarRoutes = ["/order-success"];
+
   return (
     <html lang="en">
       <body
@@ -23,7 +28,7 @@ export default function RootLayout({
         suppressHydrationWarning={true}
       >
         <div className="flex flex-col sm:flex-row gap-x-8">
-          <Sidebar />
+          {!hideSidebarRoutes.includes(pathname) && <Sidebar />}
           <Container>
             <Provider store={store}>
               <Suspense>{children}</Suspense>

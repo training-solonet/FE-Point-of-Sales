@@ -96,16 +96,25 @@ export default function OrderSummary({ product }: OrderSummaryProps) {
         return;
       }
 
-      await SubmitOrder(orderData);
-      Swal.fire({
-        icon: "success",
-        title: "Success",
-        text: "Transaction success",
-        showConfirmButton: true,
-        timer: 2500,
-      }).then(() => {
-        push(`/order-success?nama=${form.customer}&payment=${form.payment}`);
-      });
+      const response = await SubmitOrder(orderData);
+
+      if (response.status === "success") {
+        Swal.fire({
+          icon: "success",
+          title: "Success",
+          text: response.message,
+          showConfirmButton: true,
+          timer: 2500,
+        }).then(() => {
+          push(`/order-success?nama=${form.customer}&payment=${form.payment}`);
+        });
+      } else {
+        showToast(
+          "error",
+          "Transaction failed!",
+          "Payment failed please try again"
+        );
+      }
       setForm({ ...form, isLoading: false });
     } catch (err) {
       console.log(err);
