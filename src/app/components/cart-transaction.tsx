@@ -195,7 +195,7 @@ function Card({ data }: { data: ProductType[] }) {
                 >
                   -
                 </div>
-                <div className="text-xs font-medium">{item.qty}</div>
+                <div className="text-xs font-medium text-black">{item.qty}</div>
                 <div
                   onClick={() => incrementQty(item.id)}
                   className="w-5 h-5 bg-black text-white rounded-md flex justify-center items-center cursor-pointer"
