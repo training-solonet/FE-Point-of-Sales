@@ -39,16 +39,16 @@ const CustomerSearch = ({ form, setForm }: CustomerSearchProps) => {
   return (
     <div className="w-[45%]">
       <div className="flex justify-between items-center mb-1">
-        <p className="text-gray-500 font-semibold text-sm">Customer Name</p>
+        <p className="text-gray-500 font-semibold text-sm ">Customer Name</p>
         <div className="text-xs font-medium flex items-center gap-x-1 cursor-pointer" 
         onClick={() => setForm({ ...form, isNewCustomer: true, customer: "" })}
         >
-            <Plus className="size-4" />
-            <p className="text-xs font-medium">Add New</p>
+            <Plus className="size-4 text-black" />
+            <p className="text-xs font-medium text-black">Add New</p>
         </div>
       </div>
       <form className="w-full relative">
-        <div className="relative">
+        <div className="relative text-black">
           <Input
             type="search"
             placeholder="Find Customer...."
@@ -64,7 +64,7 @@ const CustomerSearch = ({ form, setForm }: CustomerSearchProps) => {
         </div>
 
         {customer.length > 0 && form.customer !== "" && !isLoading ? (
-          <div className="absolute top-12 w-full bg-white shadow-md rounded-lg">
+          <div className="absolute top-12 w-full bg-white text-black shadow-md rounded-lg">
             {customer.map((item: CustomerType, index: number) => (
               <div
                 key={index}
@@ -79,7 +79,7 @@ const CustomerSearch = ({ form, setForm }: CustomerSearchProps) => {
             ))}
           </div>
         ) : isLoading ? (
-          <div className="absolute top-12 w-full bg-white shadow-md rounded-lg">
+          <div className="absolute top-12 w-full bg-white shadow-md rounded-lg text-black">
               <div
                 className="py-2 px-3 hover:bg-slate-200 duration-300 ease-linear cursor-pointer text-sm"
               >

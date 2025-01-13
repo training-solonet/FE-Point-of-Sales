@@ -1,7 +1,7 @@
 "use client";
 import { isUPC, rupiahFormat } from "@/lib/utils";
 import { useDispatch, useSelector } from "react-redux";
-import { addToCart, deleteById } from "../redux/cartSlice";
+import { CartItem, addToCart, deleteById } from "../redux/cartSlice";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { getProductByCategory } from "../lib/data";
@@ -25,60 +25,83 @@ export interface ProductType {
 
 export type RootStateCategory = ReturnType<typeof store.getState>;
 
-export default function CardProduct({ searchValue }: { searchValue: string }) {
+export default function CardProduct({
+  searchValue,
+  setSearchValue,
+  focusInput
+}: {
+  searchValue: string;
+  setSearchValue: React.Dispatch<React.SetStateAction<string>>;
+  focusInput: () => void;
+}) {
   const dispatch = useDispatch();
   const [products, setProducts] = useState<ProductType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const selectedCategory = useSelector(
     (state: RootStateCategory) => state.category.data
   );
-  const cartItems = useSelector((state: RootStateCart) => state.cart.data);
+  const cartItems: CartItem[] = useSelector(
+    (state: RootStateCart) => state.cart.data
+  );
   const { showToast } = useToast();
 
   const handleAddToCart = (product: number) => {
-    dispatch(
-      addToCart({
-        id: product,
-        qty: 1,
-        nama: products.find((item) => item.id === product)?.nama || "",
-        gambar: "https://via.placeholder.com/300x300?text=Image+Product+1:1",
-        harga: products.find((item) => item.id === product)?.harga || 0,
-        stok: products.find((item) => item.id === product)?.stok || 0,
-        upc: products.find((item) => item.id === product)?.upc || "",
-      })
-    );
+    const productData = products.find((item) => item.id === product);
+    if (productData) {
+      dispatch(
+        addToCart({
+          id: product,
+          qty: 1,
+          nama: productData.nama,
+          gambar: "https://via.placeholder.com/300x300?text=Image+Product+1:1",
+          harga: productData.harga,
+          stok: productData.stok,
+          upc: productData.upc,
+        })
+      );
+    }
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        if (isUPC(searchValue)) {
-          const res = await getProductByCategory({
-            id: selectedCategory.kategori,
-            nama: "",
-            upc: searchValue,
-          });
-          const product = res && res.length > 0 ? res[0] : null;
-          setProducts(res || []);
+    if (isUPC(searchValue)) {
+      Swal.fire({
+        title: "Loading...",
+        text: "Fetching product data...",
+        allowOutsideClick: false,
+        didOpen: () => Swal.showLoading(),
+      });
 
+      getProductByCategory({
+        id: selectedCategory.kategori,
+        nama: "",
+        upc: searchValue,
+      })
+        .then((res) => {
+          Swal.close();
+          const product = res?.[0];
           if (product) {
             const cartItem = cartItems.find((item) => item.id === product.id);
             const availableStock = product.stok;
-            const currentQty = cartItem ? cartItem.qty : 0;
-          
+            const currentQty = cartItem?.qty || 0;
+
             if (currentQty < availableStock) {
               dispatch(
                 addToCart({
                   id: product.id,
                   qty: 1,
                   nama: product.nama,
-                  gambar: "https://via.placeholder.com/300x300?text=Image+Product+1:1",
+                  gambar:
+                    "https://via.placeholder.com/300x300?text=Image+Product+1:1",
                   harga: product.harga,
                   stok: product.stok,
                   upc: product.upc,
                 })
               );
-              showToast("success", "Product added to cart", `${product.nama} - ${rupiahFormat(product.harga)}`);
+              showToast(
+                "success",
+                "Product added to cart",
+                `${product.nama} - ${rupiahFormat(product.harga)}`
+              );
             } else {
               Swal.fire({
                 title: "Stock is limited!",
@@ -90,25 +113,43 @@ export default function CardProduct({ searchValue }: { searchValue: string }) {
           } else {
             showToast("error", "Product not found", "UPC not found");
           }
-          
-        } else {
-          const res = await getProductByCategory({
-            id: selectedCategory.kategori,
-            nama: searchValue,
-            upc: "",
+          setSearchValue("");
+          focusInput();
+        })
+        .catch((error) => {
+          console.error("Failed to fetch product by UPC", error);
+          Swal.close();
+          Swal.fire({
+            title: "Error",
+            text: "Failed to fetch product data.",
+            icon: "error",
+            confirmButtonText: "OK",
           });
-          setProducts(res || []);
-        }
-      } catch (error) {
-        console.error("Failed to fetch products", error);
-        setProducts([]);
-      }
-      setIsLoading(false);
-    };
+        });
+    } 
 
     const timeoutId = setTimeout(() => {
-      setIsLoading(true);
-      fetchData();
+      isUPC(searchValue) && setIsLoading(true);
+      !isUPC(searchValue) && getProductByCategory({
+        id: selectedCategory.kategori,
+        nama: searchValue,
+        upc: "",
+      })
+        .then((res) => {
+          setProducts(res || []);
+          setIsLoading(false);
+        })
+        .catch((error) => {
+          console.error("Failed to fetch products", error);
+          setProducts([]);
+          Swal.fire({
+            title: "Error",
+            text: "Failed to fetch product data.",
+            icon: "error",
+            confirmButtonText: "OK",
+          });
+          setIsLoading(false);
+        });
     }, 300);
 
     return () => clearTimeout(timeoutId);
@@ -117,7 +158,7 @@ export default function CardProduct({ searchValue }: { searchValue: string }) {
   return (
     <>
       <h1
-        className={`text-lg font-semibold mt-8 w-full ${
+        className={`text-lg text-black font-semibold mt-8 w-full ${
           products.length === 0 && "mb-4"
         }`}
       >
@@ -146,7 +187,7 @@ export default function CardProduct({ searchValue }: { searchValue: string }) {
         </div>
       )}
 
-      {isLoading ? <SkeletonLoader.CardProduct /> : (
+      {isLoading && !isUPC(searchValue) ? <SkeletonLoader.CardProduct /> : (
         <div className="grid md:grid-cols-3 grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-0 lg:mb-16 xl:mb-0 w-[95%]">
           {products.map((data: ProductType) => (
             <div
@@ -168,13 +209,13 @@ export default function CardProduct({ searchValue }: { searchValue: string }) {
                 )}
               </div>
               <div className="px-2 flex-grow w-full">
-                <h1 className="lg:text-xs md:text-[10px] font-semibold">
+                <h1 className="lg:text-xs md:text-[10px] text-black font-semibold">
                   {data.nama.length > 35
                     ? `${data.nama.substring(0, 35)}...`
                     : data.nama}
                 </h1>
-                <p className="text-[9px]">{data.kategori}</p>
-                <p className="text-[10.5px] font-semibold">
+                <p className="text-[9px] text-black">{data.kategori}</p>
+                <p className="text-[10.5px] font-semibold text-black">
                   {data.stok ? data.stok + " in stock" : "Out of stock!"}
                 </p>
               </div>

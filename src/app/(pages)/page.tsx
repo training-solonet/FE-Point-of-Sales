@@ -5,22 +5,33 @@ import CardProduct from "../components/card-product";
 import CartTransaction from "../components/cart-transaction";
 import CategoryList from "../components/category-list";
 import store from "../redux/store";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { SearchIcon, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 
 export default function Home() {
   const [searchValue, setSearchValue] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.toLocaleLowerCase();
     setSearchValue(value);
   };
 
-  console.log(searchValue);
+  const focusInput = () => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  };
 
   return (
-    <main className="flex">
+    <div className="flex">
       <Provider store={store}>
         <div className="flex flex-col xl:w-[80%] lg:w-[75%] md:w-[60%] mb-8">
           <div className="relative mt-4 w-[95%]">
@@ -31,17 +42,25 @@ export default function Home() {
                 className="pl-10 font-medium text-sm"
                 value={searchValue}
                 onChange={(e) => handleChange(e)}
+                ref={inputRef}
               />
               {searchValue.length > 0 && (
                 <X
-                  onClick={() => setSearchValue("")}
+                  onClick={() => {
+                    setSearchValue("");
+                    focusInput();
+                  }}
                   className="absolute size-5 right-2 top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer"
                 />
               )}
             </div>
           </div>
           <CategoryList />
-          <CardProduct searchValue={searchValue} />
+          <CardProduct
+            searchValue={searchValue}
+            setSearchValue={setSearchValue}
+            focusInput={focusInput}
+          />
         </div>
         <div className="hidden md:block md:w-1/4">
           <div className="fixed top-0 right-0 z-0 w-full md:w-1/4 lg:w-1/5 h-full">
@@ -49,6 +68,6 @@ export default function Home() {
           </div>
         </div>
       </Provider>
-    </main>
+    </div>
   );
 }

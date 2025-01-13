@@ -129,7 +129,7 @@ export default function OrderSummary({ product }: OrderSummaryProps) {
 
   return (
     <div className="bg-white pb-6 px-8 rounded-lg shadow-md">
-      <h1 className="text-2xl font-semibold">Order Summary</h1>
+      <h1 className="text-2xl font-semibold text-black">Order Summary</h1>
       <ul className="my-5">
         {product.map((item: ProductType, index: number) => (
           <OrderItem key={index} item={item} />
@@ -139,18 +139,18 @@ export default function OrderSummary({ product }: OrderSummaryProps) {
       <div className="mt-4">
         <div className="flex justify-between">
           <span className="text-gray-500 font-semibold">Total items</span>
-          <span className="text-block font-semibold">
+          <span className="text-block font-semibold text-black">
             {product.length} variants of items
           </span>
         </div>
         <div className="flex justify-between">
           <span className="text-gray-500 font-semibold">Subtotal</span>
-          <span className="text-block font-semibold">
+          <span className="text-block font-semibold text-black">
             {rupiahFormat(subTotal)}
           </span>
         </div>
         <hr className="my-4" />
-        <h1 className="text-lg font-semibold">Payment and Customer Details</h1>
+        <h1 className="text-lg font-semibold text-black">Payment and Customer Details</h1>
         <div className="flex justify-between mt-3 mb-5">
           <PaymentMethod form={form} setForm={setForm} />
           {form.isNewCustomer === false && (

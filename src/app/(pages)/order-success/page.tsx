@@ -126,7 +126,7 @@ export default function OrderSuccess() {
           </div>
 
           <div className="mt-8">
-            <h2 className="text-xl font-semibold">Ordered Items:</h2>
+            <h2 className="text-xl font-semibold text-black">Ordered Items:</h2>
             <ul className="mt-4">
               {data.map((item) => (
                 <li key={item.id} className="flex justify-between">
@@ -140,7 +140,7 @@ export default function OrderSuccess() {
 
             <hr className="my-4" />
 
-            <div className="mt-4 text-right">
+            <div className="mt-4 text-right text-black">
               <p className="text-lg font-semibold">Subtotal: {rupiahFormat(subtotal)}</p>
               <p className="text-lg font-semibold">Discount ({discountRate}%): -{rupiahFormat(discount)}</p>
               <p className="text-lg font-semibold">Tax ({taxRate}%): {rupiahFormat(tax)}</p>

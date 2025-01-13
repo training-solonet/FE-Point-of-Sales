@@ -61,12 +61,12 @@ export default function CartTransaction() {
 
   return (
     <div
-      className="w-[300px] xl:w-[340px] 2xl:w-[360px]  shadow-2xl bg-white fixed right-0 top-0 h-full overflow-y-auto"
+      className="w-[300px] xl:w-[340px] 2xl:w-[360px] shadow-2xl bg-white fixed right-0 top-0 h-full overflow-y-auto"
       style={{ scrollbarWidth: "none" }}
     >
       <div className="pt-8 px-4">
         <div className="flex justify-between items-center mb-2">
-          <h2 className="text-lg font-semibold">
+          <h2 className="text-lg font-semibold text-black">
             Order Items {totalItem ? `(${totalItem})` : ""}
           </h2>
           {data.length > 0 && (
@@ -108,16 +108,16 @@ export default function CartTransaction() {
             <div className="h-[2px] w-full bg-slate-100 mb-4" />
             <div className="w-full flex justify-between items-center text-xs">
               <p className="font-medium text-slate-800">Total items</p>
-              <p className="text-semibold">{totalItem} item</p>
+              <p className="text-semibold text-black">{totalItem} item</p>
             </div>
             <div className="w-full flex justify-between items-center text-xs">
               <p className="font-medium text-slate-800">Subtotal</p>
-              <p className="text-semibold">{rupiahFormat(subtotal)}</p>
+              <p className="text-semibold text-black">{rupiahFormat(subtotal)}</p>
             </div>
             <div className="h-[2px] w-full bg-slate-100 my-4" />
             <div className="flex justify-between items-center">
               <h1 className="font-semibold text-slate-800">Total</h1>
-              <h1 className="font-semibold">{rupiahFormat(total)}</h1>
+              <h1 className="font-semibold text-black">{rupiahFormat(total)}</h1>
             </div>
             <div className="my-4 w-full">
               <Button className="w-full py-2 bg-gray-700" onClick={() => handleOrder()}>
@@ -173,7 +173,7 @@ function Card({ data }: { data: ProductType[] }) {
           />
           <div className="flex-grow py-1">
             <div className="flex justify-between">
-              <h1 className="text-xs font-semibold">
+              <h1 className="text-xs font-semibold text-black">
                 {item?.nama?.length > 20
                   ? `${item.nama.substring(0, 20)}...`
                   : item.nama}
@@ -187,11 +187,11 @@ function Card({ data }: { data: ProductType[] }) {
               {rupiahFormat(item.harga)}
             </p>
             <div className="flex justify-between items-center mt-1">
-              <p className="text-sm font-medium">x{item.qty}</p>
+              <p className="text-sm font-medium text-black">x{item.qty}</p>
               <div className="flex gap-x-2 items-center">
                 <div
                   onClick={() => decrementQty(item.id)}
-                  className="w-5 h-5 bg-slate-300 rounded-md flex justify-center items-center cursor-pointer"
+                  className="w-5 h-5 bg-slate-300 text-black rounded-md flex justify-center items-center cursor-pointer"
                 >
                   -
                 </div>

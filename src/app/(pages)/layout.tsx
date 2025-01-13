@@ -24,7 +24,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${poppins.className} bg-white text-foreground`}
+        className={`${poppins.className} bg-white min-h-screen`}
         suppressHydrationWarning={true}
       >
         <div className="flex flex-col sm:flex-row gap-x-8">

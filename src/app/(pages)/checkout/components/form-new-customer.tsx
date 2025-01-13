@@ -21,7 +21,7 @@ const FormNewCustomer = ({ form, setForm }: NewCustomerProps) => {
         </div>
       </div>
       <div className="flex items-center mt-2 w-full gap-x-4">
-        <div className="space-y-1 w-full">
+        <div className="space-y-1 w-full text-black">
           <h2 className="text-gray-500 font-semibold text-xs">Full Name</h2>
           <div className="relative">
             <Input
@@ -35,7 +35,7 @@ const FormNewCustomer = ({ form, setForm }: NewCustomerProps) => {
             <User className="absolute top-1/2 -translate-y-1/2 left-2 size-5" />
           </div>
         </div>
-        <div className="space-y-1 w-full">
+        <div className="space-y-1 w-full text-black">
           <h2 className="text-gray-500 font-semibold text-xs">Phone</h2>
           <div className="relative">
             <Input
@@ -50,7 +50,7 @@ const FormNewCustomer = ({ form, setForm }: NewCustomerProps) => {
           </div>
         </div>
       </div>
-      <div className="space-y-1 w-full mt-3">
+      <div className="space-y-1 w-full mt-3 text-black">
         <h2 className="text-gray-500 font-semibold text-xs">Address</h2>
         <div className="relative">
           <Input

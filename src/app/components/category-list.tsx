@@ -47,7 +47,7 @@ export default function CategoryList() {
           >
             <div
               onClick={() => dispatch(clearFilter())}
-              className={`${selectedCategory.kategori === 0 ? 'bg-black text-white' : 'bg-transparent'} border-black flex-shrink-0 min-w-auto text-xs sm:text-sm lg:text-xs font-semibold px-4 py-1 md:px-5 md:py-2 lg:px-5 lg:py- border-[2px] hover:bg-black hover:text-white duration-200 ease-linear rounded-3xl cursor-pointer`}
+              className={`${selectedCategory.kategori === 0 ? 'bg-black text-white' : 'bg-transparent text-black'} border-black flex-shrink-0 min-w-auto text-xs sm:text-sm lg:text-xs font-semibold px-4 py-1 md:px-5 md:py-2 lg:px-5 lg:py- border-[2.5px] hover:bg-black hover:text-white duration-200 ease-linear rounded-3xl cursor-pointer`}
             >
               All
             </div>
@@ -55,7 +55,7 @@ export default function CategoryList() {
               <div
                 key={category.id}
                 onClick={() => handleCategoryClick(category)}
-                className={`${selectedCategory.kategori > 0 && selectedCategory.kategori === category.id ? 'bg-black text-white' : 'bg-transparent'} border-black flex-shrink-0 min-w-auto text-xs sm:text-sm lg:text-xs font-semibold px-4 py-1 md:px-5 md:py-2 lg:px-5 lg:py- border-[2px] hover:bg-black hover:text-white duration-200 ease-linear rounded-3xl cursor-pointer`}
+                className={`${selectedCategory.kategori > 0 && selectedCategory.kategori === category.id ? 'bg-black text-white' : 'bg-transparent text-black'} border-black flex-shrink-0 min-w-auto text-xs sm:text-sm lg:text-xs font-semibold px-4 py-1 md:px-5 md:py-2 lg:px-5 lg:py- border-[2.5px] hover:bg-black hover:text-white duration-200 ease-linear rounded-3xl cursor-pointer`}
               >
                 {category.nama}
               </div>
