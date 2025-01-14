@@ -55,16 +55,16 @@ export default function CartTransaction() {
     }
 
     if (data.length > 0) {
-      push('/checkout');
+      push("/checkout");
     }
   };
 
   return (
     <div
-      className="w-[300px] xl:w-[340px] 2xl:w-[360px] shadow-2xl bg-white fixed right-0 top-0 h-full overflow-y-auto"
+      className="w-[300px] xl:w-[340px] 2xl:w-[360px] shadow-2xl bg-white fixed right-0 top-0 h-full flex flex-col"
       style={{ scrollbarWidth: "none" }}
     >
-      <div className="pt-8 px-4">
+      <div className="pt-8 px-4 flex-shrink-0">
         <div className="flex justify-between items-center mb-2">
           <h2 className="text-lg font-semibold text-black">
             Order Items {totalItem ? `(${totalItem})` : ""}
@@ -78,9 +78,14 @@ export default function CartTransaction() {
             </p>
           )}
         </div>
-
         <div className="h-[2px] w-full bg-slate-100 mb-4" />
+      </div>
 
+      {/* Scrollable Card Section */}
+      <div
+        className="flex-grow overflow-y-auto px-4"
+        style={{ scrollbarWidth: "none" }}
+      >
         {data.length === 0 && !isLoading && (
           <div className="w-full flex flex-col justify-center items-center my-8">
             <Image
@@ -99,34 +104,37 @@ export default function CartTransaction() {
         <div className="w-full mx-auto">
           {isLoading ? <SkeletonLoader.CartCard /> : <Card data={data} />}
         </div>
-
-        {data.length > 0 && !isLoading && (
-          <div className="mt-4">
-            <h2 className="text-lg font-semibold mb-2 text-slate-600">
-              Order Summary
-            </h2>
-            <div className="h-[2px] w-full bg-slate-100 mb-4" />
-            <div className="w-full flex justify-between items-center text-xs">
-              <p className="font-medium text-slate-800">Total items</p>
-              <p className="text-semibold text-black">{totalItem} item</p>
-            </div>
-            <div className="w-full flex justify-between items-center text-xs">
-              <p className="font-medium text-slate-800">Subtotal</p>
-              <p className="text-semibold text-black">{rupiahFormat(subtotal)}</p>
-            </div>
-            <div className="h-[2px] w-full bg-slate-100 my-4" />
-            <div className="flex justify-between items-center">
-              <h1 className="font-semibold text-slate-800">Total</h1>
-              <h1 className="font-semibold text-black">{rupiahFormat(total)}</h1>
-            </div>
-            <div className="my-4 w-full">
-              <Button className="w-full py-2 bg-gray-700" onClick={() => handleOrder()}>
-                Place Order
-              </Button>
-            </div>
-          </div>
-        )}
       </div>
+
+      {data.length > 0 && !isLoading && (
+        <div className="p-4 bg-white border-t border-gray-200">
+          <h2 className="text-lg font-semibold mb-2 text-slate-600">
+            Order Summary
+          </h2>
+          <div className="h-[2px] w-full bg-slate-100 mb-4" />
+          <div className="w-full flex justify-between items-center text-xs">
+            <p className="font-medium text-slate-800">Total items</p>
+            <p className="text-semibold text-black">{totalItem} item</p>
+          </div>
+          <div className="w-full flex justify-between items-center text-xs">
+            <p className="font-medium text-slate-800">Subtotal</p>
+            <p className="text-semibold text-black">{rupiahFormat(subtotal)}</p>
+          </div>
+          <div className="h-[2px] w-full bg-slate-100 my-4" />
+          <div className="flex justify-between items-center">
+            <h1 className="font-semibold text-slate-800">Total</h1>
+            <h1 className="font-semibold text-black">{rupiahFormat(total)}</h1>
+          </div>
+          <div className="my-4 w-full">
+            <Button
+              className="w-full py-2 bg-gray-700"
+              onClick={() => handleOrder()}
+            >
+              Place Order
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -138,7 +146,7 @@ function Card({ data }: { data: ProductType[] }) {
     if (product) {
       const availableStock = product.stok;
       const currentQty = product.qty;
-  
+
       if (currentQty < availableStock) {
         dispatch(increment(item));
       } else {
@@ -150,7 +158,7 @@ function Card({ data }: { data: ProductType[] }) {
         });
       }
     }
-  };  
+  };
 
   const decrementQty = (item: number) => {
     dispatch(decrement(item));
@@ -158,7 +166,7 @@ function Card({ data }: { data: ProductType[] }) {
 
   return (
     <div
-      className="w-full max-h-[20rem] xl:max-h-[12rem] overflow-y-auto"
+      className="w-full h-auto overflow-y-auto"
       style={{ scrollbarWidth: "none" }}
     >
       {data.map((item: ProductType) => (
@@ -195,7 +203,7 @@ function Card({ data }: { data: ProductType[] }) {
                 >
                   -
                 </div>
-                <div className="text-xs font-medium">{item.qty}</div>
+                <div className="text-xs font-medium text-black">{item.qty}</div>
                 <div
                   onClick={() => incrementQty(item.id)}
                   className="w-5 h-5 bg-black text-white rounded-md flex justify-center items-center cursor-pointer"

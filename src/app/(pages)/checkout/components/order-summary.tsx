@@ -15,12 +15,13 @@ interface OrderSummaryProps {
 }
 
 export interface FormProps {
-  payment: string,
-  customer: string,
-  no_hp: string,
-  alamat: string,
-  isLoading: boolean,
-  isNewCustomer: boolean,
+  payment: string;
+  customer: string;
+  no_hp: string;
+  alamat: string;
+  isLoading: boolean;
+  isNewCustomer: boolean;
+  cashAmount: number;
 }
 
 export default function OrderSummary({ product }: OrderSummaryProps) {
@@ -33,6 +34,7 @@ export default function OrderSummary({ product }: OrderSummaryProps) {
     alamat: "",
     isLoading: false,
     isNewCustomer: false,
+    cashAmount: 0,
   });
 
   const subTotal = product.reduce(
@@ -40,12 +42,15 @@ export default function OrderSummary({ product }: OrderSummaryProps) {
     0
   );
   const totalAmount = subTotal;
-  console.log(product);
 
   const handleCheckout = async () => {
     let orderData;
 
-    if (form.no_hp !== "" && form.alamat !== "" && form.isNewCustomer === true) {
+    if (
+      form.no_hp !== "" &&
+      form.alamat !== "" &&
+      form.isNewCustomer === true
+    ) {
       orderData = {
         customer_name: form.customer,
         no_hp: form.no_hp,
@@ -86,11 +91,23 @@ export default function OrderSummary({ product }: OrderSummaryProps) {
         );
         setForm({ ...form, isLoading: false });
         return;
-      } else if (form.isNewCustomer === true && form.no_hp === "" && form.alamat === "") {
+      } else if (
+        form.isNewCustomer === true &&
+        form.no_hp === "" &&
+        form.alamat === ""
+      ) {
         showToast(
           "error",
           "Transaction failed!",
           "Add Phone number and Address before making a transactions"
+        );
+        setForm({ ...form, isLoading: false });
+        return;
+      } else if (form.payment === "cash" && form.cashAmount < totalAmount) {
+        showToast(
+          "error",
+          "Transaction failed!",
+          "Cash amount must be equal to or greater than the total amount"
         );
         setForm({ ...form, isLoading: false });
         return;
@@ -106,7 +123,13 @@ export default function OrderSummary({ product }: OrderSummaryProps) {
           showConfirmButton: true,
           timer: 2500,
         }).then(() => {
-          push(`/order-success?nama=${form.customer}&payment=${form.payment}`);
+          const query = new URLSearchParams({
+            nama: form.customer,
+            payment: form.payment,
+            ...(form.payment === "cash" && { change: String(form.cashAmount - totalAmount) }),
+          }).toString();
+        
+          push(`/order-success?${query}`);
         });
       } else {
         showToast(
@@ -150,7 +173,9 @@ export default function OrderSummary({ product }: OrderSummaryProps) {
           </span>
         </div>
         <hr className="my-4" />
-        <h1 className="text-lg font-semibold text-black">Payment and Customer Details</h1>
+        <h1 className="text-lg font-semibold text-black">
+          Payment and Customer Details
+        </h1>
         <div className="flex justify-between mt-3 mb-5">
           <PaymentMethod form={form} setForm={setForm} />
           {form.isNewCustomer === false && (
@@ -164,10 +189,30 @@ export default function OrderSummary({ product }: OrderSummaryProps) {
         )}
       </div>
       <hr />
-      <div className="mt-2 flex justify-between text-black font-bold text-xl">
+      <div className="mt-2 flex justify-between text-black font-bold text-lg">
         <span>Total</span>
         <span>{rupiahFormat(totalAmount)}</span>
       </div>
+      {form.payment === "cash" && (
+        <div className="text-lg">
+          <div className="flex justify-between">
+            <span className="text-black font-bold">Cash Amount</span>
+            <span className="text-black font-bold">
+              {rupiahFormat(form.cashAmount)}
+            </span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-black font-bold">Change</span>
+            <span className="text-black font-bold">
+              {rupiahFormat(
+                form.cashAmount - totalAmount > 0
+                  ? form.cashAmount - totalAmount
+                  : 0
+              )}
+            </span>
+          </div>
+        </div>
+      )}
       <div className="mt-4 text-right" onClick={() => handleCheckout()}>
         <button
           className={`${

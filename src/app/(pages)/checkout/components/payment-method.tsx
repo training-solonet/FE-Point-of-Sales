@@ -1,9 +1,11 @@
 import { Banknote, Coins, CreditCard } from "lucide-react";
 import { FormProps } from "./order-summary";
+import { Input } from "@/components/ui/input";
+import { formatNumber, parseNumber } from "@/lib/utils";
 
 interface PaymentMethodProps {
-    form: FormProps,
-    setForm: (form: FormProps) => void
+  form: FormProps;
+  setForm: (form: FormProps) => void;
 }
 
 const PaymentMethod = ({ form, setForm }: PaymentMethodProps) => {
@@ -45,6 +47,23 @@ const PaymentMethod = ({ form, setForm }: PaymentMethodProps) => {
           <span>Piutang</span>
         </button>
       </div>
+
+      {form.payment === "cash" && (
+        <div className="mt-4">
+          <label className="block text-sm font-medium text-gray-700">
+            Cash Amount
+          </label>
+          <Input
+            type="text"
+            className="mt-1 block w-full rounded-md text-black border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
+            placeholder="Enter cash amount..."
+            value={formatNumber(form.cashAmount)}
+            onChange={(e) =>
+              setForm({ ...form, cashAmount: parseNumber(e.target.value) })
+            }
+          />
+        </div>
+      )}
     </div>
   );
 };

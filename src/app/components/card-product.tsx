@@ -64,20 +64,12 @@ export default function CardProduct({
 
   useEffect(() => {
     if (isUPC(searchValue)) {
-      Swal.fire({
-        title: "Loading...",
-        text: "Fetching product data...",
-        allowOutsideClick: false,
-        didOpen: () => Swal.showLoading(),
-      });
-
       getProductByCategory({
         id: selectedCategory.kategori,
         nama: "",
         upc: searchValue,
       })
         .then((res) => {
-          Swal.close();
           const product = res?.[0];
           if (product) {
             const cartItem = cartItems.find((item) => item.id === product.id);
@@ -118,7 +110,6 @@ export default function CardProduct({
         })
         .catch((error) => {
           console.error("Failed to fetch product by UPC", error);
-          Swal.close();
           Swal.fire({
             title: "Error",
             text: "Failed to fetch product data.",
@@ -153,6 +144,7 @@ export default function CardProduct({
     }, 300);
 
     return () => clearTimeout(timeoutId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchValue, selectedCategory]);
 
   return (

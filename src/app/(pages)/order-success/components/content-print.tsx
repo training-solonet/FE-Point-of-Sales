@@ -78,7 +78,7 @@ export default function PrintContent({
       <hr className="my-2" />
 
       <div className="mt-4 flex flex-col gap-y-0">
-        <div className="flex justify-between items-center flex-wrap">
+        {/* <div className="flex justify-between items-center flex-wrap">
           <p className="font-semibold text-[9px]">Subtotal</p>
           <p className="font-medium text-[9px]">{rupiahFormat(subtotal)}</p>
         </div>
@@ -89,7 +89,7 @@ export default function PrintContent({
         <div className="flex justify-between items-center flex-wrap">
           <p className="font-semibold text-[9px]">Tax ({taxRate}%)</p>
           <p className="font-medium text-[9px]">{rupiahFormat(tax)}</p>
-        </div>
+        </div> */}
         <div className="flex justify-between items-center flex-wrap">
           <p className="font-semibold text-[9px]">Total</p>
           <p className="font-medium text-[9px]">{rupiahFormat(total)}</p>

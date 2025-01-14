@@ -39,7 +39,7 @@ export default function Home() {
             <div className="flex gap-x-6">
               <Input
                 placeholder="Search anything..."
-                className="pl-10 font-medium text-sm"
+                className="pl-10 font-medium text-sm text-black"
                 value={searchValue}
                 onChange={(e) => handleChange(e)}
                 ref={inputRef}

@@ -1,7 +1,7 @@
 export default function LoadingOrder() {
   return (
     <div className="bg-white pb-6 px-8 rounded-lg shadow-md">
-      <h1 className="text-2xl font-semibold">Order Summary</h1>
+      <h1 className="text-2xl font-semibold text-black">Order Summary</h1>
       <div className="animate-pulse">
         <ul className="my-5 space-y-4">
             <li className="flex justify-between">

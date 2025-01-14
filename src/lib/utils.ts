@@ -21,3 +21,11 @@ export const getFormattedDate: () => string = () => {
   };
   return new Date().toLocaleDateString("id-ID", options);
 };
+
+export const formatNumber = (value: number): string => {
+  return value.toLocaleString("id-ID").replace(/,/g, ".");
+};
+
+export const parseNumber = (value: string): number => {
+  return parseFloat(value.replace(/\./g, "")) || 0;
+};

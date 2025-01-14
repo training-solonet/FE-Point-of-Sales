@@ -21,12 +21,9 @@ export default function OrderSuccess() {
   const dispatch = useDispatch();
   const printRef = useRef<HTMLDivElement>(null);
 
-  const discountRate = 10; // Default discount rate (10%)
-  const taxRate = 10; // Default tax rate (10%)
-
   useEffect(() => {
     const fetchData = async () => {
-      setIsLoading(true); 
+      setIsLoading(true);
       const cartItemsString = localStorage.getItem("CART_ITEMS");
       const cartItems = cartItemsString ? JSON.parse(cartItemsString) : [];
 
@@ -48,10 +45,6 @@ export default function OrderSuccess() {
   }, [cartItemsRedux, router]);
 
   const subtotal = data.reduce((acc, item) => acc + item.harga * item.qty, 0);
-  const discount = (discountRate / 100) * subtotal;
-  const subtotalAfterDiscount = subtotal - discount;
-  const tax = (taxRate / 100) * subtotalAfterDiscount;
-  const total = subtotalAfterDiscount + tax;
 
   const handleToHome = () => {
     dispatch(clear());
@@ -64,15 +57,15 @@ export default function OrderSuccess() {
       const originalContents = document.body.innerHTML;
 
       document.body.innerHTML = printContents;
-      
+
       const afterPrintHandler = () => {
         document.body.innerHTML = originalContents;
         window.removeEventListener("afterprint", afterPrintHandler);
         window.location.reload();
       };
-  
+
       window.addEventListener("afterprint", afterPrintHandler);
-  
+
       setTimeout(() => {
         window.print();
       }, 500);
@@ -81,6 +74,7 @@ export default function OrderSuccess() {
 
   const customerName = q?.get("nama") || "Guest";
   const paymentMethod = q?.get("payment") || "Unknown";
+  const change = q?.get("change") || null;
 
   if (isLoading) {
     return (
@@ -130,7 +124,9 @@ export default function OrderSuccess() {
             <ul className="mt-4">
               {data.map((item) => (
                 <li key={item.id} className="flex justify-between">
-                  <span className="font-semibold text-gray-500">{item.nama}</span>
+                  <span className="font-semibold text-gray-500">
+                    {item.nama}
+                  </span>
                   <span className="font-semibold text-gray-950">
                     {item.qty} x {rupiahFormat(item.harga)}
                   </span>
@@ -141,10 +137,26 @@ export default function OrderSuccess() {
             <hr className="my-4" />
 
             <div className="mt-4 text-right text-black">
-              <p className="text-lg font-semibold">Subtotal: {rupiahFormat(subtotal)}</p>
-              <p className="text-lg font-semibold">Discount ({discountRate}%): -{rupiahFormat(discount)}</p>
-              <p className="text-lg font-semibold">Tax ({taxRate}%): {rupiahFormat(tax)}</p>
-              <p className="text-xl font-bold">Total: {rupiahFormat(total)}</p>
+              <div className="flex justify-between">
+                <p className="text-xl font-bold">Total</p>
+                <p className="text-xl font-bold">{rupiahFormat(subtotal)}</p>
+              </div>
+              {change !== null && (
+                <div>
+                  <div className="flex justify-between">
+                    <p className="text-xl font-bold">Cash Amount</p>
+                    <p className="text-xl font-bold">
+                      {rupiahFormat(subtotal + Number(change))}
+                    </p>
+                  </div>
+                  <div className="flex justify-between">
+                    <p className="text-xl font-bold">Change</p>
+                    <p className="text-xl font-bold">
+                      {rupiahFormat(Number(change))}
+                    </p>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -174,8 +186,6 @@ export default function OrderSuccess() {
             orderId={"#152"}
             payment={paymentMethod}
             product={data}
-            discountRate={discountRate}
-            taxRate={taxRate}
           />
         </div>
       </div>
