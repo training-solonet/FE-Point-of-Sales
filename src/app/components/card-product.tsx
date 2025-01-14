@@ -53,7 +53,7 @@ export default function CardProduct({
           id: product,
           qty: 1,
           nama: productData.nama,
-          gambar: "https://via.placeholder.com/300x300?text=Image+Product+1:1",
+          gambar: "https://placehold.co/300x300?text=" + productData.nama + ".png",
           harga: productData.harga,
           stok: productData.stok,
           upc: productData.upc,
@@ -83,7 +83,7 @@ export default function CardProduct({
                   qty: 1,
                   nama: product.nama,
                   gambar:
-                    "https://via.placeholder.com/300x300?text=Image+Product+1:1",
+                    "https://placehold.co/300x300?text=" + product.nama + ".png",
                   harga: product.harga,
                   stok: product.stok,
                   upc: product.upc,
@@ -188,7 +188,7 @@ export default function CardProduct({
             >
               <div>
                 <Image
-                  src="https://via.placeholder.com/300x300?text=Image+Product+1:1"
+                  src="https://placehold.co/300x300/png?text=Product Image"
                   width={300}
                   height={300}
                   alt={data.nama}

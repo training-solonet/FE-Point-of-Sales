@@ -173,7 +173,7 @@ function Card({ data }: { data: ProductType[] }) {
         <div key={item.id} className="flex gap-x-2 mb-4">
           <Image
             // src={item.gambar}
-            src={"https://via.placeholder.com/300x300?text=Image+Product+1:1"}
+            src={"https://placehold.co/300x300/png?text=Image+Product+1:1"}
             width={300}
             height={300}
             alt={item.nama}

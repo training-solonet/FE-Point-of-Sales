@@ -1,4 +1,5 @@
 import axios from "axios";
+import dotenv from "dotenv";
 
 
 export const getCustomer = async (name: string) => {

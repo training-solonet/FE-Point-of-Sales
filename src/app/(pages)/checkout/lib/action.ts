@@ -16,7 +16,7 @@ interface OrderDataType {
 export const SubmitOrder = async (orderData: OrderDataType): Promise<{ status: string, message: string }> => {
   try {
     const response = await axios(
-      "https://penjualan.connectis.my.id/api/order",
+      "http://127.0.0.1:8000/api/order",
       {
         method: "POST",
         headers: {
@@ -26,7 +26,10 @@ export const SubmitOrder = async (orderData: OrderDataType): Promise<{ status: s
       }
     );
 
+    console.log(orderData);
+
     if (response.status >= 200 && response.status < 300) {
+      console.log("Order submitted successfully", response.data);
       return response.data;
     } else {
       throw new Error("Failed to submit order");
