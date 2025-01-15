@@ -124,7 +124,8 @@ export default function CardProduct({
             setIsLoading(false);
             setIsUPCProcessed(false);
           });
-      } else if (!isUPCProcessed) {
+      } else if (!isUPCProcessed && searchValue.trim() !== "") {
+        // Adding check here
         setIsLoading(true);
         getProductByCategory({
           id: selectedCategory.kategori,
@@ -154,6 +155,32 @@ export default function CardProduct({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchValue, selectedCategory]);
 
+  useEffect(() => {
+    getProductByCategory({
+      id: selectedCategory.kategori,
+      nama: "",
+      upc: "",
+    })
+      .then((res) => {
+        setProducts(res || []);
+      })
+      .catch((error) => {
+        console.error("Failed to fetch products", error);
+        setProducts([]);
+        Swal.fire({
+          title: "Error",
+          text: "Failed to fetch product data.",
+          icon: "error",
+          confirmButtonText: "OK",
+        });
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedCategory]);
+
   return (
     <>
       <h1 className="text-lg text-black font-semibold mt-8 w-full">Products</h1>
@@ -181,7 +208,7 @@ export default function CardProduct({
         </div>
       )}
 
-      {isLoading && isUPCProcessed ? (
+      {isLoading ? (
         <SkeletonLoader.CardProduct />
       ) : (
         <div className="grid md:grid-cols-3 grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-0 lg:mb-16 xl:mb-0 w-[95%]">
