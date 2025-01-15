@@ -28,7 +28,7 @@ export type RootStateCategory = ReturnType<typeof store.getState>;
 export default function CardProduct({
   searchValue,
   setSearchValue,
-  focusInput
+  focusInput,
 }: {
   searchValue: string;
   setSearchValue: React.Dispatch<React.SetStateAction<string>>;
@@ -37,6 +37,7 @@ export default function CardProduct({
   const dispatch = useDispatch();
   const [products, setProducts] = useState<ProductType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isUPCProcessed, setIsUPCProcessed] = useState(false);
   const selectedCategory = useSelector(
     (state: RootStateCategory) => state.category.data
   );
@@ -63,85 +64,91 @@ export default function CardProduct({
   };
 
   useEffect(() => {
-    if (isUPC(searchValue)) {
-      getProductByCategory({
-        id: selectedCategory.kategori,
-        nama: "",
-        upc: searchValue,
-      })
-        .then((res) => {
-          const product = res?.[0];
-          if (product) {
-            const cartItem = cartItems.find((item) => item.id === product.id);
-            const availableStock = product.stok;
-            const currentQty = cartItem?.qty || 0;
-
-            if (currentQty < availableStock) {
-              dispatch(
-                addToCart({
-                  id: product.id,
-                  qty: 1,
-                  nama: product.nama,
-                  gambar:
-                    "https://via.placeholder.com/300x300?text=Image+Product+1:1",
-                  harga: product.harga,
-                  stok: product.stok,
-                  upc: product.upc,
-                })
-              );
-              showToast(
-                "success",
-                "Product added to cart",
-                `${product.nama} - ${rupiahFormat(product.harga)}`
-              );
-            } else {
-              Swal.fire({
-                title: "Stock is limited!",
-                text: `Only ${availableStock} items available.`,
-                icon: "warning",
-                confirmButtonText: "OK",
-              });
-            }
-          } else {
-            showToast("error", "Product not found", "UPC not found");
-          }
-          setSearchValue("");
-          focusInput();
-        })
-        .catch((error) => {
-          console.error("Failed to fetch product by UPC", error);
-          Swal.fire({
-            title: "Error",
-            text: "Failed to fetch product data.",
-            icon: "error",
-            confirmButtonText: "OK",
-          });
-        });
-    } 
-
     const timeoutId = setTimeout(() => {
-      isUPC(searchValue) && setIsLoading(true);
-      !isUPC(searchValue) && getProductByCategory({
-        id: selectedCategory.kategori,
-        nama: searchValue,
-        upc: "",
-      })
-        .then((res) => {
-          setProducts(res || []);
-          setIsLoading(false);
+      if (isUPC(searchValue)) {
+        setIsUPCProcessed(true);
+        getProductByCategory({
+          id: selectedCategory.kategori,
+          nama: "",
+          upc: searchValue,
         })
-        .catch((error) => {
-          console.error("Failed to fetch products", error);
-          setProducts([]);
-          Swal.fire({
-            title: "Error",
-            text: "Failed to fetch product data.",
-            icon: "error",
-            confirmButtonText: "OK",
+          .then((res) => {
+            const product = res?.[0];
+            if (product) {
+              const cartItem = cartItems.find((item) => item.id === product.id);
+              const availableStock = product.stok;
+              const currentQty = cartItem?.qty || 0;
+
+              if (currentQty < availableStock) {
+                dispatch(
+                  addToCart({
+                    id: product.id,
+                    qty: 1,
+                    nama: product.nama,
+                    gambar:
+                      "https://via.placeholder.com/300x300?text=Image+Product+1:1",
+                    harga: product.harga,
+                    stok: product.stok,
+                    upc: product.upc,
+                  })
+                );
+                showToast(
+                  "success",
+                  "Product added to cart",
+                  `${product.nama} - ${rupiahFormat(product.harga)}`
+                );
+              } else {
+                Swal.fire({
+                  title: "Stock is limited!",
+                  text: `Only ${availableStock} items available.`,
+                  icon: "warning",
+                  confirmButtonText: "OK",
+                });
+              }
+            } else {
+              showToast("error", "Product not found", "UPC not found");
+            }
+            setSearchValue("");
+            focusInput();
+          })
+          .catch((error) => {
+            console.error("Failed to fetch product by UPC", error);
+            Swal.fire({
+              title: "Error",
+              text: "Failed to fetch product data.",
+              icon: "error",
+              confirmButtonText: "OK",
+            });
+          })
+          .finally(() => {
+            setIsLoading(false);
+            setIsUPCProcessed(false);
           });
-          setIsLoading(false);
-        });
-    }, 300);
+      } else if (!isUPCProcessed) {
+        setIsLoading(true);
+        getProductByCategory({
+          id: selectedCategory.kategori,
+          nama: searchValue,
+          upc: "",
+        })
+          .then((res) => {
+            setProducts(res || []);
+          })
+          .catch((error) => {
+            console.error("Failed to fetch products", error);
+            setProducts([]);
+            Swal.fire({
+              title: "Error",
+              text: "Failed to fetch product data.",
+              icon: "error",
+              confirmButtonText: "OK",
+            });
+          })
+          .finally(() => {
+            setIsLoading(false);
+          });
+      }
+    }, 500);
 
     return () => clearTimeout(timeoutId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -149,20 +156,15 @@ export default function CardProduct({
 
   return (
     <>
-      <h1
-        className={`text-lg text-black font-semibold mt-8 w-full ${
-          products.length === 0 && "mb-4"
-        }`}
-      >
-        Products
-      </h1>
+      <h1 className="text-lg text-black font-semibold mt-8 w-full">Products</h1>
 
-      {!isLoading && products.length > 0 && (
-        <p className="text-xs font-semibold text-slate-800 mb-4">
-          Showing {products.length} product
-          {products.length > 1 && "s"}.
-        </p>
-      )}
+      <p className="text-xs font-semibold text-slate-800 mb-4">
+        {isLoading
+          ? "Loading product data..."
+          : `Displaying ${products.length} product${
+              products.length > 1 ? "s" : ""
+            }.`}
+      </p>
 
       {!isLoading && products.length === 0 && (
         <div className="mt-8 mx-auto">
@@ -179,7 +181,9 @@ export default function CardProduct({
         </div>
       )}
 
-      {isLoading && !isUPC(searchValue) ? <SkeletonLoader.CardProduct /> : (
+      {isLoading && isUPCProcessed ? (
+        <SkeletonLoader.CardProduct />
+      ) : (
         <div className="grid md:grid-cols-3 grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-0 lg:mb-16 xl:mb-0 w-[95%]">
           {products.map((data: ProductType) => (
             <div
@@ -215,8 +219,8 @@ export default function CardProduct({
                 <p className="text-slate-700 font-semibold text-xs">
                   {rupiahFormat(data.harga)}
                 </p>
-                {data.stok > 0 && (
-                  cartItems.find((item) => item.id === data.id) ? (
+                {data.stok > 0 &&
+                  (cartItems.find((item) => item.id === data.id) ? (
                     <Trash
                       onClick={() => dispatch(deleteById(data.id))}
                       className="size-7 text-white bg-black rounded-2xl p-[6px] cursor-pointer"
@@ -226,14 +230,12 @@ export default function CardProduct({
                       onClick={() => handleAddToCart(data.id)}
                       className="size-7 text-white bg-black rounded-2xl p-[6px] cursor-pointer"
                     />
-                  )
-                )}
+                  ))}
               </div>
             </div>
           ))}
         </div>
       )}
-
     </>
   );
 }
