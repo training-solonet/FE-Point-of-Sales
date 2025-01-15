@@ -125,7 +125,6 @@ export default function CardProduct({
             setIsUPCProcessed(false);
           });
       } else if (!isUPCProcessed && searchValue.trim() !== "") {
-        // Adding check here
         setIsLoading(true);
         getProductByCategory({
           id: selectedCategory.kategori,
@@ -179,7 +178,7 @@ export default function CardProduct({
       });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedCategory]);
+  }, [selectedCategory, searchValue]);
 
   return (
     <>
